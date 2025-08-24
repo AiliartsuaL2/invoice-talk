@@ -22,10 +22,10 @@ class UserController(
     }
 
     @PostMapping("/api/v1/users/login")
-    fun createUser(
+    fun loginUser(
         @Valid @RequestBody
         request: PostLogin.Request,
-    ): ResponseEntity<Unit> {
+    ): ResponseEntity<PostLogin.Response> {
         return ResponseEntity.ok(userService.login(request))
     }
 }

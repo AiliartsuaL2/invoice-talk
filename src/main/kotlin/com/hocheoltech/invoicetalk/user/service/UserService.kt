@@ -24,12 +24,13 @@ class UserService(
         userRepository.save(user)
     }
 
-    fun login(request: PostLogin.Request) {
+    fun login(request: PostLogin.Request): PostLogin.Response {
         // TODO 임시, Security 연동 후 수정 필요
         val user = userRepository.findByUsername(request.username!!)
             ?: throw IllegalArgumentException(ErrorCode.NOT_EXISTS_USER.message)
         if (!user.checkPassword(request.password!!)) {
             throw IllegalArgumentException(ErrorCode.NOT_EXISTS_USER.message)
         }
+        return PostLogin.Response(user.id!!)
     }
 }
