@@ -16,5 +16,9 @@ enum class ErrorCode(
 
     // 회원
     DUPLICATE_USERNAME(400, "이미 존재하는 ID 입니다."),
-    NOT_EXISTS_USER(404, "존재하지 않는 사용자입니다.")
+    NOT_EXISTS_USER(400, "존재하지 않는 사용자입니다."),
+
+    // 송장
+    NOT_EXISTS_INVOICE(400, "존재하지 않는 송장입니다."),
+    ALREADY_UPDATED_STATUS(400, "이미 상태 변경이 되어있는 송장입니다."),
 }

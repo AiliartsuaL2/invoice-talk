@@ -7,10 +7,12 @@ import jakarta.persistence.*
 class InvoiceStatusHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
-    val invoiceId: Long,
+    val id: Long? = null,
     @Enumerated(EnumType.STRING)
     val beforeStatus: InvoiceStatus?,
     @Enumerated(EnumType.STRING)
     val afterStatus: InvoiceStatus,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoice_id")
+    val invoice: Invoice,
 )
