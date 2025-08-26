@@ -5,6 +5,7 @@ import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
 import com.hocheoltech.invoicetalk.user.entity.User
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Entity
 class Invoice(
@@ -26,6 +27,8 @@ class Invoice(
     var receiveAddress: String,
     // 받는 사람
     var receiverName: String,
+    // 발송 처리 시각
+    var scannedAt: LocalDateTime,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: User,
@@ -45,5 +48,6 @@ class Invoice(
         }
         this.status = afterStatus
         this.histories.add(statusHistory)
+        this.scannedAt = LocalDateTime.now()
     }
 }

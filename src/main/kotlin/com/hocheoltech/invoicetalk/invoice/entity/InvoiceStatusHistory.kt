@@ -1,5 +1,6 @@
 package com.hocheoltech.invoicetalk.invoice.entity
 
+import com.hocheoltech.invoicetalk.global.entity.BaseEntity
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import jakarta.persistence.*
 
@@ -15,4 +16,4 @@ class InvoiceStatusHistory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     val invoice: Invoice,
-)
+): BaseEntity()

@@ -1,7 +1,9 @@
 package com.hocheoltech.invoicetalk.invoice.service
 
+import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
 import com.hocheoltech.invoicetalk.invoice.dto.GetInvoice
+import com.hocheoltech.invoicetalk.invoice.dto.GetInvoiceCount
 import com.hocheoltech.invoicetalk.invoice.dto.PostInvoiceScan
 import com.hocheoltech.invoicetalk.invoice.dto.PostInvoice
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceMapper
@@ -10,6 +12,8 @@ import com.hocheoltech.invoicetalk.invoice.repository.InvoiceRepository
 import com.hocheoltech.invoicetalk.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Service
 @Transactional(readOnly = true)
@@ -43,9 +47,15 @@ class InvoiceService(
         // TODO 엑셀 업로드로 구현
     }
 
-    fun getInvoice(userId: Long): List<GetInvoice.Response> {
-        return invoiceRepository.findByUserId(userId)
-            .map { invoiceMapper.toResponse(it) }
+    fun getInvoices(
+        userId: Long,
+        request: GetInvoice.Request
+    ): List<GetInvoice.Response> {
+        return invoiceRepository.findByUserIdAndStatusInOrderByCreatedAtDesc(
+            userId,
+            request.toInvoiceStatus(),
+            request.toPageable(),
+        ).map { invoiceMapper.toResponse(it) }
     }
 
     /**
@@ -68,7 +78,8 @@ class InvoiceService(
             0 -> throw IllegalArgumentException(ErrorCode.NOT_EXISTS_INVOICE.message)
             1 -> {
                 val invoice = invoices.first()
-                val statusHistory = invoiceStatusHistoryMapper.updateInvoice(invoice, request.type.toAfterInvoiceStatus())
+                val statusHistory =
+                    invoiceStatusHistoryMapper.updateInvoice(invoice, request.type.toAfterInvoiceStatus())
                 invoice.updateStatus(
                     afterStatus = request.type.toAfterInvoiceStatus(),
                     statusHistory = statusHistory,
@@ -78,5 +89,38 @@ class InvoiceService(
             else -> invoices.map { invoiceMapper.toScanResponse(it) }
         }
         return PostInvoiceScan.Response(response)
+    }
+
+    fun getInvoice(
+        userId: Long,
+        invoiceId: Long
+    ): GetInvoice.Response {
+        return invoiceRepository.findByUserIdAndId(
+            userId,
+            invoiceId,
+        )?.let {
+            invoiceMapper.toResponse(it)
+        } ?: throw IllegalArgumentException(ErrorCode.NOT_EXISTS_INVOICE.message)
+    }
+
+    fun getInvoiceCount(userId: Long): GetInvoiceCount.Response {
+        val queryResults = invoiceRepository.findInvoiceCountByStatus(userId)
+        val today = LocalDate.now()
+        val todayProcessCount = invoiceRepository.countByUserIdAndScannedAtBetween(
+            userId = userId,
+            startAt = today.atStartOfDay(),
+            endAt = today.atTime(LocalTime.MAX)
+        )
+        val countByStatus = queryResults.associate { Pair(it.status, it.count) }
+        val pendingCount = countByStatus[InvoiceStatus.PENDING] ?: 0
+        val successCount = countByStatus[InvoiceStatus.SUCCESS] ?: 0
+        val errorCount = countByStatus[InvoiceStatus.ERROR] ?: 0
+        return GetInvoiceCount.Response(
+            todayProcessCount = todayProcessCount,
+            allCount = (pendingCount + successCount + errorCount),
+            pendingCount = pendingCount,
+            successCount = successCount,
+            errorCount = errorCount,
+        )
     }
 }
