@@ -18,7 +18,6 @@ interface InvoiceMapper {
         request: PostInvoice.Request,
         @Context user: User,
     ): Invoice
-
     fun toResponse(invoice: Invoice): GetInvoice.Response
 
     fun toScanResponse(invoice: Invoice): PostInvoiceScan.Response.InvoiceInfo
