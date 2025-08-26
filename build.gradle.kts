@@ -45,6 +45,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
+    // query log
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
 
     // Querydsl
     implementation("com.querydsl:querydsl-core:5.0.0")

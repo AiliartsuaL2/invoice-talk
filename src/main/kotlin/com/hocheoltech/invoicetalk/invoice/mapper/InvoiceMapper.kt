@@ -12,11 +12,14 @@ import org.mapstruct.Mapping
 @Mapper
 interface InvoiceMapper {
     @Mapping(target = "user", expression = "java(user)")
+    @Mapping(target = "status", expression = "java(InvoiceStatus.PENDING)")
+    @Mapping(target = "histories", expression = "java(new java.util.LinkedHashSet<>())")
     fun toEntity(
         request: PostInvoice.Request,
         @Context user: User,
     ): Invoice
 
     fun toResponse(invoice: Invoice): GetInvoice.Response
+
     fun toScanResponse(invoice: Invoice): PostInvoiceScan.Response.InvoiceInfo
 }

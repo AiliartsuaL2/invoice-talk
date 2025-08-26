@@ -1,6 +1,7 @@
 package com.hocheoltech.invoicetalk.invoice.repository.custom
 
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
+import com.hocheoltech.invoicetalk.invoice.dto.GetInvoiceCount
 import com.hocheoltech.invoicetalk.invoice.entity.Invoice
 
 interface CustomInvoiceRepository {
@@ -10,4 +11,8 @@ interface CustomInvoiceRepository {
         number: String,
         invoiceId: Long?,
     ): List<Invoice>
+
+    fun findInvoiceCountByStatus(
+        userId: Long,
+    ): List<GetInvoiceCount.QueryResult>
 }

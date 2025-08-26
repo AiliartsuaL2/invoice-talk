@@ -1,5 +1,6 @@
 package com.hocheoltech.invoicetalk.invoice.dto
 
+import com.hocheoltech.invoicetalk.global.anotation.NotNullEnum
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
@@ -9,7 +10,7 @@ class PostInvoiceScan {
         val id: Long?,
         @field:NotBlank
         val invoiceNumber: String,
-        @field:NotBlank
+        @field:NotNullEnum
         val type: UpdateType,
     ) {
         enum class UpdateType {
@@ -44,6 +45,7 @@ class PostInvoiceScan {
             val courierName: String,
             val number: String,
             val name: String,
+            val scannedAt: LocalDateTime?,
             val createdAt: LocalDateTime,
         )
     }

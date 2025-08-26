@@ -21,4 +21,5 @@ enum class ErrorCode(
     // 송장
     NOT_EXISTS_INVOICE(400, "존재하지 않는 송장입니다."),
     ALREADY_UPDATED_STATUS(400, "이미 상태 변경이 되어있는 송장입니다."),
+    ALREADY_EXISTS_INVOICE_BY_COURIER_NUMBER(400, "해당 택배사의 바코드는 이미 등록되어있습니다."),
 }
