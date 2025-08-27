@@ -31,6 +31,6 @@ class UserService(
         if (!user.checkPassword(request.password!!)) {
             throw IllegalArgumentException(ErrorCode.NOT_EXISTS_USER.message)
         }
-        return PostLogin.Response(user.id!!)
+        return PostLogin.Response(user.id!!, user.name)
     }
 }

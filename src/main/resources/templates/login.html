@@ -278,7 +278,7 @@
             .then(data => {
                 // userId를 localStorage에 저장
                 localStorage.setItem('userId', data.userId);
-                localStorage.setItem('username', loginData.username);
+                localStorage.setItem('name', data.name);
                 // 대시보드로 이동
                 window.location.href = '/page/v1/dashboard';
             })

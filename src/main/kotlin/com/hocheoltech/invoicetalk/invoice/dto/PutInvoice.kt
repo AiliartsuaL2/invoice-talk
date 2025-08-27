@@ -1,9 +1,11 @@
 package com.hocheoltech.invoicetalk.invoice.dto
 
+import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import jakarta.validation.constraints.NotBlank
 
-class PostInvoice {
+class PutInvoice {
     data class Request(
+        val id: Long?,
         @field:NotBlank
         val courierName: String?,
         @field:NotBlank
@@ -16,5 +18,6 @@ class PostInvoice {
         val receiveAddress: String?,
         @field:NotBlank
         val receiverName: String?,
+        val status: InvoiceStatus = InvoiceStatus.PENDING,
     )
 }

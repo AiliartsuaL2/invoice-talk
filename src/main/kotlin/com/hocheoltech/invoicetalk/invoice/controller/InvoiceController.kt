@@ -1,9 +1,6 @@
 package com.hocheoltech.invoicetalk.invoice.controller
 
-import com.hocheoltech.invoicetalk.invoice.dto.GetInvoice
-import com.hocheoltech.invoicetalk.invoice.dto.GetInvoiceCount
-import com.hocheoltech.invoicetalk.invoice.dto.PostInvoice
-import com.hocheoltech.invoicetalk.invoice.dto.PostInvoiceScan
+import com.hocheoltech.invoicetalk.invoice.dto.*
 import com.hocheoltech.invoicetalk.invoice.service.InvoiceService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -13,15 +10,26 @@ import org.springframework.web.bind.annotation.*
 class InvoiceController(
     private val invoiceService: InvoiceService,
 ) {
-    // 단건등록
-    @PostMapping("/api/v1/invoices")
-    fun createInvoice(
+    // 등록 or 수정
+    @PutMapping("/api/v1/invoices")
+    fun saveInvoice(
         @RequestHeader(value = "user-id")
         userId: Long,
         @Valid @RequestBody
-        request: PostInvoice.Request,
+        request: PutInvoice.Request,
     ): ResponseEntity<Unit> {
-        return ResponseEntity.ok(invoiceService.createInvoice(userId, request))
+        return ResponseEntity.ok(invoiceService.saveInvoice(userId, request))
+    }
+
+    // 삭제
+    @DeleteMapping("/api/v1/invoices")
+    fun deleteInvoice(
+        @RequestHeader(value = "user-id")
+        userId: Long,
+        @Valid @RequestBody
+        request: DeleteInvoice.Request,
+    ): ResponseEntity<Unit> {
+        return ResponseEntity.ok(invoiceService.deleteInvoice(userId, request))
     }
 
     // 엑셀 등록
@@ -30,7 +38,7 @@ class InvoiceController(
         @RequestHeader(value = "user-id")
         userId: Long,
         @Valid @RequestBody
-        request: List<PostInvoice.Request>,
+        request: List<PutInvoice.Request>,
     ): ResponseEntity<Unit> {
         return ResponseEntity.ok(invoiceService.createInvoices(userId, request))
     }

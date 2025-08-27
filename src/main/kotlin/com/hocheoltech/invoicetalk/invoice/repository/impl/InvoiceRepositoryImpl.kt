@@ -39,4 +39,24 @@ class InvoiceRepositoryImpl(
             .groupBy(invoice.status)
             .fetch()
     }
+
+    override fun existsSameNumber(
+        invoiceId: Long?,
+        userId: Long,
+        courierName: String,
+        number: String,
+    ): Boolean {
+        val data = jpaQueryFactory
+            .select(invoice)
+            .from(invoice)
+            .where(
+                invoice.user.id.eq(userId),
+                invoice.courierName.eq(courierName),
+                invoice.number.eq(number),
+                invoiceId?.let {
+                    invoice.id.ne(it)
+                },
+            ).fetchFirst()
+        return data != null
+    }
 }

@@ -15,4 +15,11 @@ interface CustomInvoiceRepository {
     fun findInvoiceCountByStatus(
         userId: Long,
     ): List<GetInvoiceCount.QueryResult>
+
+    fun existsSameNumber(
+        invoiceId: Long?,
+        userId: Long,
+        courierName: String,
+        number: String,
+    ): Boolean
 }

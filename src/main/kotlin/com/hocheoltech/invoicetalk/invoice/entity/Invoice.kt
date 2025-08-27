@@ -3,6 +3,7 @@ package com.hocheoltech.invoicetalk.invoice.entity
 import com.hocheoltech.invoicetalk.global.entity.BaseEntity
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
+import com.hocheoltech.invoicetalk.invoice.dto.PutInvoice
 import com.hocheoltech.invoicetalk.user.entity.User
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -49,5 +50,15 @@ class Invoice(
         this.status = afterStatus
         this.histories.add(statusHistory)
         this.scannedAt = LocalDateTime.now()
+    }
+
+    fun modify(request: PutInvoice.Request) {
+        courierName = request.courierName!!
+        number = request.number!!
+        name = request.name!!
+        sendAddress = request.sendAddress!!
+        receiveAddress = request.receiveAddress!!
+        receiverName = request.receiverName!!
+        status = request.status
     }
 }

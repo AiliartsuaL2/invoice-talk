@@ -12,5 +12,6 @@ class PostLogin {
      // TODO 임시 (토큰 생성 전까지)
      data class Response(
          val userId: Long,
+         val name: String,
      )
 }

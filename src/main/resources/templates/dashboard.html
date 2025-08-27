@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +58,7 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* 메인 컨텐트 */
+        /* 메인 컨텐츠 */
         .container {
             max-width: 1200px;
             margin: 30px auto;
@@ -80,36 +80,51 @@
             color: #333;
         }
 
-        .stats-cards {
+        .stats-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .stat-card {
+        .stat-button {
             background: white;
             padding: 25px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             text-align: center;
             transition: transform 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
         }
 
-        .stat-card:hover {
+        .stat-button:hover {
             transform: translateY(-5px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
 
-        .stat-card .number {
+        .stat-button .number {
             font-size: 32px;
             font-weight: bold;
             color: #667eea;
             margin-bottom: 5px;
         }
 
-        .stat-card .label {
+        .stat-button:hover .number {
+            color: white;
+        }
+
+        .stat-button .label {
             color: #666;
             font-size: 14px;
+        }
+
+        .stat-button:hover .label {
+            color: white;
         }
 
         /* 액션 버튼들 */
@@ -335,6 +350,28 @@
             background: #e8ebff;
         }
 
+        /* 로딩 스피너 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* 반응형 디자인 */
         @media (max-width: 768px) {
             .header-content {
@@ -356,7 +393,7 @@
                 justify-content: center;
             }
 
-            .stats-cards {
+            .stats-buttons {
                 grid-template-columns: 1fr 1fr;
             }
 
@@ -372,7 +409,7 @@
         }
 
         @media (max-width: 480px) {
-            .stats-cards {
+            .stats-buttons {
                 grid-template-columns: 1fr;
             }
 
@@ -394,30 +431,30 @@
     </div>
 </div>
 
-<!-- 메인 컨텐트 -->
+<!-- 메인 컨텐츠 -->
 <div class="container">
     <div class="dashboard-header">
         <h1 class="dashboard-title">송장 관리</h1>
     </div>
 
-    <!-- 통계 카드 -->
-    <div class="stats-cards">
-        <div class="stat-card">
-            <div class="number" id="totalCount" th:text="${totalInvoices}">0</div>
-            <div class="label">총 송장 수</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="successCount" th:text="${completedInvoices}">0</div>
+    <!-- 통계 버튼 -->
+    <div class="stats-buttons">
+        <button class="stat-button" onclick="loadInvoiceList('ALL')">
+            <div class="number" id="totalCount">0</div>
+            <div class="label">전체</div>
+        </button>
+        <button class="stat-button" onclick="loadInvoiceList('SUCCESS')">
+            <div class="number" id="successCount">0</div>
             <div class="label">완료된 송장</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="pendingCount" th:text="${pendingInvoices}">0</div>
+        </button>
+        <button class="stat-button" onclick="loadInvoiceList('PENDING')">
+            <div class="number" id="pendingCount">0</div>
             <div class="label">처리 중인 송장</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="errorCount" th:text="${errorInvoices}">0</div>
+        </button>
+        <button class="stat-button" onclick="loadInvoiceList('ERROR')">
+            <div class="number" id="errorCount">0</div>
             <div class="label">에러 송장</div>
-        </div>
+        </button>
     </div>
 
     <!-- 액션 버튼 -->
@@ -435,6 +472,10 @@
         <div class="table-header">
             <div class="table-title">송장 내역</div>
         </div>
+        <div class="loading" id="tableLoading">
+            <div class="spinner"></div>
+            <p>데이터를 불러오는 중...</p>
+        </div>
         <div class="table-responsive">
             <table>
                 <thead>
@@ -450,22 +491,7 @@
                 </tr>
                 </thead>
                 <tbody id="invoiceTableBody">
-                <!-- Thymeleaf로 동적 데이터 렌더링 -->
-                <tr th:each="invoice : ${invoices}">
-                    <td th:text="${invoice.number}">#202408210156</td>
-                    <td th:text="${invoice.courierName}">한진택배</td>
-                    <td th:text="${invoice.sendAddress}">서울시 강남구</td>
-                    <td th:text="${invoice.receiveAddress + ' (' + invoice.receiverName + ')'}">부산시 해운대구 (김철수)</td>
-                    <td th:text="${invoice.name}">전자제품</td>
-                    <td>
-                        <span class="status" th:classappend="'status-' + ${invoice.status.name()}" th:text="${invoice.status == T(com.hocheoltech.invoicetalk.global.enums.InvoiceStatus).PENDING ? '대기' : (invoice.status == T(com.hocheoltech.invoicetalk.global.enums.InvoiceStatus).SUCCESS ? '완료' : '에러')}">완료</span>
-                    </td>
-                    <td th:text="${#temporals.format(invoice.createdAt, 'yyyy-MM-dd HH:mm')}">2024-08-21 14:30</td>
-                    <td class="table-actions">
-                        <button class="btn btn-sm btn-edit" th:onclick="'editInvoice(' + ${invoice.id} + ')'">수정</button>
-                        <button class="btn btn-sm btn-delete" th:onclick="'deleteInvoice(' + ${invoice.id} + ')'">삭제</button>
-                    </td>
-                </tr>
+                <!-- 동적으로 생성될 내용 -->
                 </tbody>
             </table>
         </div>
@@ -521,7 +547,7 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display: flex; gap: 10px;">
                 <button type="submit" class="btn btn-primary">저장</button>
                 <button type="button" class="btn btn-secondary" onclick="closeModal('invoiceModal')">취소</button>
             </div>
@@ -542,13 +568,13 @@
                      ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
                     <input type="file" id="excelFile" name="file" accept=".xlsx,.xls" style="display: none;" onchange="handleFileSelect(event)">
                     <div id="uploadText">
-                        <p>📁 클릭하거나 파일을 드래그하여 업로드</p>
+                        <p>📄 클릭하거나 파일을 드래그하여 업로드</p>
                         <small>엑셀 파일만 업로드 가능합니다 (.xlsx, .xls)</small>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display: flex; gap: 10px;">
                 <button type="submit" class="btn btn-primary">업로드</button>
                 <button type="button" class="btn btn-secondary" onclick="closeModal('excelModal')">취소</button>
             </div>
@@ -557,20 +583,23 @@
 </div>
 
 <script>
-    // 페이지 로드 시 로그인 체크
+    // 페이지 로드 시 초기화
     document.addEventListener('DOMContentLoaded', function() {
         const userId = localStorage.getItem('userId');
         if (!userId) {
             alert('로그인이 필요합니다.');
-            window.location.href = '/login';
+            window.location.href = '/page/v1/login';
             return;
         }
 
         // 사용자명 표시
-        const username = localStorage.getItem('username');
+        const username = localStorage.getItem('name');
         if (username) {
-            document.getElementById('usernameDisplay').textContent = username;
+            document.getElementById('usernameDisplay').textContent = username + '님';
         }
+
+        // 데이터 로드
+        loadDashboardData();
     });
 
     // 공통 헤더에 userId 추가하는 함수
@@ -580,6 +609,96 @@
             'Content-Type': 'application/json',
             'user-id': userId
         };
+    }
+
+    // 대시보드 데이터 로드
+    function loadDashboardData() {
+        loadCountData();
+        loadInvoiceList('ALL');
+    }
+
+    // 카운트 데이터 로드
+    function loadCountData() {
+        fetch('/api/v1/invoices/count', {
+            method: 'GET',
+            headers: getAuthHeaders()
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalCount').textContent = data.allCount;
+                document.getElementById('successCount').textContent = data.successCount;
+                document.getElementById('pendingCount').textContent = data.pendingCount;
+                document.getElementById('errorCount').textContent = data.errorCount;
+            })
+            .catch(error => {
+                console.error('Error loading count data:', error);
+            });
+    }
+
+    // 송장 리스트 로드
+    function loadInvoiceList(status) {
+        const loading = document.getElementById('tableLoading');
+        const tableBody = document.getElementById('invoiceTableBody');
+
+        loading.style.display = 'block';
+
+        fetch(`/api/v1/invoices?status=${status}&pageNumber=1&size=20`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                renderInvoiceTable(data);
+            })
+            .catch(error => {
+                console.error('Error loading invoice list:', error);
+                loading.style.display = 'none';
+                tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #666;">데이터를 불러오는데 실패했습니다.</td></tr>';
+            });
+    }
+
+    // 송장 테이블 렌더링
+    function renderInvoiceTable(invoices) {
+        const tableBody = document.getElementById('invoiceTableBody');
+
+        if (invoices.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #666;">등록된 송장이 없습니다.</td></tr>';
+            return;
+        }
+
+        const rows = invoices.map(invoice => {
+            const statusText = getStatusText(invoice.status);
+            const formattedDate = new Date(invoice.createdAt).toLocaleString('ko-KR');
+
+            return `
+                <tr>
+                    <td>${invoice.number}</td>
+                    <td>${invoice.courierName}</td>
+                    <td>${invoice.sendAddress}</td>
+                    <td>${invoice.receiveAddress} (${invoice.receiverName})</td>
+                    <td>${invoice.name}</td>
+                    <td><span class="status status-${invoice.status}">${statusText}</span></td>
+                    <td>${formattedDate}</td>
+                    <td class="table-actions">
+                        <button class="btn btn-sm btn-edit" onclick="editInvoice(${invoice.id})">수정</button>
+                        <button class="btn btn-sm btn-delete" onclick="deleteInvoice(${invoice.id})">삭제</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        tableBody.innerHTML = rows;
+    }
+
+    // 상태 텍스트 변환
+    function getStatusText(status) {
+        switch(status) {
+            case 'PENDING': return '대기';
+            case 'SUCCESS': return '완료';
+            case 'ERROR': return '에러';
+            default: return status;
+        }
     }
 
     // 모달 관련 함수
@@ -634,7 +753,7 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        location.reload();
+                        loadDashboardData(); // 데이터 새로고침
                     } else {
                         alert('삭제에 실패했습니다.');
                     }
@@ -649,8 +768,8 @@
     function logout() {
         if (confirm('로그아웃 하시겠습니까?')) {
             localStorage.removeItem('userId');
-            localStorage.removeItem('username');
-            window.location.href = '/login';
+            localStorage.removeItem('name');
+            window.location.href = '/page/v1/login';
         }
     }
 
@@ -662,7 +781,7 @@
         const isEdit = document.getElementById('invoiceId').value !== '';
 
         if (isEdit) {
-            // 수정의 경우 - PATCH 요청
+            // 수정의 경우 - PUT 요청
             const invoiceId = document.getElementById('invoiceId').value;
             const data = {
                 id: parseInt(invoiceId),
@@ -676,13 +795,14 @@
             };
 
             fetch('/api/v1/invoices', {
-                method: 'PATCH',
+                method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(data)
             })
                 .then(response => {
                     if (response.ok) {
-                        location.reload();
+                        closeModal('invoiceModal');
+                        loadDashboardData(); // 데이터 새로고침
                     } else {
                         alert('수정에 실패했습니다.');
                     }
@@ -692,7 +812,7 @@
                     alert('수정 중 오류가 발생했습니다.');
                 });
         } else {
-            // 추가의 경우 - POST 요청
+            // 추가의 경우 - PUT 요청
             const data = {
                 courierName: formData.get('courierName'),
                 number: formData.get('number'),
@@ -703,13 +823,14 @@
             };
 
             fetch('/api/v1/invoices', {
-                method: 'POST',
+                method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(data)
             })
                 .then(response => {
                     if (response.ok) {
-                        location.reload();
+                        closeModal('invoiceModal');
+                        loadDashboardData(); // 데이터 새로고침
                     } else {
                         alert('추가에 실패했습니다.');
                     }
@@ -744,7 +865,8 @@
             .then(response => {
                 if (response.ok) {
                     alert('엑셀 업로드가 완료되었습니다.');
-                    location.reload();
+                    closeModal('excelModal');
+                    loadDashboardData(); // 데이터 새로고침
                 } else {
                     alert('엑셀 업로드에 실패했습니다.');
                 }
@@ -784,9 +906,9 @@
         const file = event.target.files[0];
         if (file) {
             document.getElementById('uploadText').innerHTML = `
-                    <p>📁 ${file.name}</p>
-                    <small>파일이 선택되었습니다</small>
-                `;
+                <p>📄 ${file.name}</p>
+                <small>파일이 선택되었습니다</small>
+            `;
         }
     }
 

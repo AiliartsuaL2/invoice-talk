@@ -2,10 +2,7 @@ package com.hocheoltech.invoicetalk.invoice.service
 
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
-import com.hocheoltech.invoicetalk.invoice.dto.GetInvoice
-import com.hocheoltech.invoicetalk.invoice.dto.GetInvoiceCount
-import com.hocheoltech.invoicetalk.invoice.dto.PostInvoiceScan
-import com.hocheoltech.invoicetalk.invoice.dto.PostInvoice
+import com.hocheoltech.invoicetalk.invoice.dto.*
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceMapper
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceStatusHistoryMapper
 import com.hocheoltech.invoicetalk.invoice.repository.InvoiceRepository
@@ -28,28 +25,45 @@ class InvoiceService(
      *  - 택배사별로 송장번호는 unique하게 관리
      */
     @Transactional
-    fun createInvoice(
+    fun saveInvoice(
         userId: Long,
-        request: PostInvoice.Request
+        request: PutInvoice.Request
     ) {
         val user = userRepository.getReferenceById(userId)
-        invoiceRepository.findByUserIdAndCourierNameAndNumber(
-            userId = userId,
-            courierName = request.courierName!!,
-            number = request.number!!,
-        )?.run {
+        checkDuplicateNumberAtSameCourier(userId, request)
+
+        if (request.id == null) {
+            val invoice = invoiceMapper.toEntity(request, user)
+            val history = invoiceStatusHistoryMapper.createInvoice(invoice)
+            invoice.addHistory(history)
+            invoiceRepository.save(invoice)
+        } else {
+            val invoice = invoiceRepository.findByUserIdAndId(userId, request.id)
+                ?: throw IllegalArgumentException(ErrorCode.NOT_EXISTS_INVOICE.message)
+            invoice.modify(request)
+        }
+    }
+
+    private fun checkDuplicateNumberAtSameCourier(
+        userId: Long,
+        request: PutInvoice.Request,
+    ) {
+        // 수정 케이스의 경우 id에 미해당하는 송장 조건 추가
+        if (invoiceRepository.existsSameNumber(
+                invoiceId = request.id,
+                userId = userId,
+                courierName = request.courierName!!,
+                number = request.number!!,
+            )
+        ) {
             throw IllegalArgumentException(ErrorCode.ALREADY_EXISTS_INVOICE_BY_COURIER_NUMBER.message)
         }
-        val invoice = invoiceMapper.toEntity(request, user)
-        val history = invoiceStatusHistoryMapper.createInvoice(invoice)
-        invoice.addHistory(history)
-        invoiceRepository.save(invoice)
     }
 
     @Transactional
     fun createInvoices(
         userId: Long,
-        request: List<PostInvoice.Request>
+        request: List<PutInvoice.Request>
     ) {
         // TODO 엑셀 업로드로 구현
     }
@@ -93,6 +107,7 @@ class InvoiceService(
                 )
                 emptyList()
             }
+
             else -> invoices.map { invoiceMapper.toScanResponse(it) }
         }
         return PostInvoiceScan.Response(response)
@@ -129,5 +144,17 @@ class InvoiceService(
             successCount = successCount,
             errorCount = errorCount,
         )
+    }
+
+    @Transactional
+    fun deleteInvoice(
+        userId: Long,
+        request: DeleteInvoice.Request,
+    ) {
+        val invoice = invoiceRepository.findByUserIdAndId(
+            userId = userId,
+            invoiceId = request.id!!,
+        ) ?: throw IllegalArgumentException(ErrorCode.NOT_EXISTS_INVOICE.message)
+        invoiceRepository.delete(invoice)
     }
 }

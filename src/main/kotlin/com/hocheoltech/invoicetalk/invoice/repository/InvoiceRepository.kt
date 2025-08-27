@@ -21,6 +21,4 @@ interface InvoiceRepository: JpaRepository<Invoice, Long>, CustomInvoiceReposito
         startAt: LocalDateTime,
         endAt: LocalDateTime,
     ): Long
-
-    fun findByUserIdAndCourierNameAndNumber(userId: Long, courierName: String, number: String): Invoice?
 }
