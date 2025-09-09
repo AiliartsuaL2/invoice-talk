@@ -105,7 +105,7 @@ class InvoiceService(
                     afterStatus = request.type.toAfterInvoiceStatus(),
                     statusHistory = statusHistory,
                 )
-                emptyList()
+                listOf(invoiceMapper.toScanResponse(invoice))
             }
 
             else -> invoices.map { invoiceMapper.toScanResponse(it) }

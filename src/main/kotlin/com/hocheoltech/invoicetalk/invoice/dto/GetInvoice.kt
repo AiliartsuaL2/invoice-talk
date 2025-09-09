@@ -32,6 +32,12 @@ class GetInvoice {
                         InvoiceStatus.ERROR,
                     )
                 }
+                StatusType.PROCESSED -> {
+                    setOf(
+                        InvoiceStatus.SUCCESS,
+                        InvoiceStatus.ERROR,
+                    )
+                }
                 StatusType.PENDING -> setOf(InvoiceStatus.PENDING)
                 StatusType.SUCCESS -> setOf(InvoiceStatus.SUCCESS)
                 StatusType.ERROR -> setOf(InvoiceStatus.ERROR)
@@ -40,6 +46,7 @@ class GetInvoice {
 
         enum class StatusType {
             ALL,
+            PROCESSED,
             PENDING,
             SUCCESS,
             ERROR,
@@ -51,7 +58,7 @@ class GetInvoice {
         val status: InvoiceStatus,
         val courierName: String,
         val number: String,
-        val name: String,
+        val productName: String,
         val sendAddress: String,
         val receiveAddress: String,
         val receiverName: String,

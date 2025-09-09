@@ -11,7 +11,7 @@ class PutInvoice {
         @field:NotBlank
         val number: String?,
         @field:NotBlank
-        val name: String?,
+        val productName: String?,
         @field:NotBlank
         val sendAddress: String?,
         @field:NotBlank
