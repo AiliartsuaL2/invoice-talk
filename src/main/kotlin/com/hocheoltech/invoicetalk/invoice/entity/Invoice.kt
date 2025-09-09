@@ -21,7 +21,7 @@ class Invoice(
     // 송장번호
     var number: String,
     // 상품명
-    var name: String,
+    var productName: String,
     // 발송지
     var sendAddress: String,
     // 목적지
@@ -55,7 +55,7 @@ class Invoice(
     fun modify(request: PutInvoice.Request) {
         courierName = request.courierName!!
         number = request.number!!
-        name = request.name!!
+        productName = request.productName!!
         sendAddress = request.sendAddress!!
         receiveAddress = request.receiveAddress!!
         receiverName = request.receiverName!!
