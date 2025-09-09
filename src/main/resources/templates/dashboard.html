@@ -912,7 +912,7 @@
 
                 <div class="form-row">
                     <label class="form-label">상품명</label>
-                    <input type="text" id="name" name="name" class="form-input" placeholder="상품명을 입력하세요" required />
+                    <input type="text" id="productName" name="productName" class="form-input" placeholder="상품명을 입력하세요" required />
                 </div>
 
                 <div class="form-row">
@@ -1064,7 +1064,7 @@
         }
 
         const filtered = lastLoadedInvoices.filter(inv => {
-            return (inv.name || '').toLowerCase().includes(query) ||
+            return (inv.productName || '').toLowerCase().includes(query) ||
                 (inv.number || '').toLowerCase().includes(query) ||
                 (inv.receiverName || '').toLowerCase().includes(query);
         });
@@ -1119,7 +1119,7 @@
                 <div class="row" role="button" tabindex="0" onclick="openInvoiceDetail(${inv.id})"
                      onkeydown="if(event.key==='Enter'){openInvoiceDetail(${inv.id})}">
                     <div>
-                        <div class="cell-title">${escapeHtml(inv.name || '-')}</div>
+                        <div class="cell-title">${escapeHtml(inv.productName || '-')}</div>
                         <div class="cell-sub">${escapeHtml(inv.courierName || '')} ${inv.number ? '· ' + escapeHtml(inv.number) : ''}</div>
                     </div>
                     <div>${statusLabel}</div>
@@ -1197,7 +1197,7 @@
             { label: '상태', value: statusText },
             { label: '택배회사', value: invoice.courierName },
             { label: '송장번호', value: invoice.number },
-            { label: '상품명', value: invoice.name },
+            { label: '상품명', value: invoice.productName },
             { label: '보내는 주소', value: invoice.sendAddress },
             { label: '받는 주소', value: invoice.receiveAddress },
             { label: '받는 사람', value: invoice.receiverName },
@@ -1229,7 +1229,7 @@
                 document.getElementById('invoiceId').value = data.id;
                 document.getElementById('courierName').value = data.courierName || '';
                 document.getElementById('number').value = data.number || '';
-                document.getElementById('name').value = data.name || '';
+                document.getElementById('productName').value = data.productName || '';
                 document.getElementById('sendAddress').value = data.sendAddress || '';
                 document.getElementById('receiveAddress').value = data.receiveAddress || '';
                 document.getElementById('receiverName').value = data.receiverName || '';
@@ -1287,7 +1287,7 @@
         const data = {
             courierName: String(formData.get('courierName') || '').trim(),
             number: String(formData.get('number') || '').trim(),
-            name: String(formData.get('name') || '').trim(),
+            productName: String(formData.get('productName') || '').trim(),
             sendAddress: String(formData.get('sendAddress') || '').trim(),
             receiveAddress: String(formData.get('receiveAddress') || '').trim(),
             receiverName: String(formData.get('receiverName') || '').trim()
