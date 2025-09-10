@@ -88,14 +88,14 @@ class InvoiceService(
     fun scanInvoice(
         userId: Long,
         request: PostInvoiceScan.Request
-    ): PostInvoiceScan.Response {
+    ): List<PostInvoiceScan.Response> {
         val invoices = invoiceRepository.findForScan(
             userId = userId,
             number = request.invoiceNumber,
             status = request.type.toBeforeInvoiceStatus(),
             invoiceId = request.id,
         )
-        val response = when (invoices.size) {
+        return when (invoices.size) {
             0 -> throw IllegalArgumentException(ErrorCode.NOT_EXISTS_INVOICE.message)
             1 -> {
                 val invoice = invoices.first()
@@ -110,7 +110,6 @@ class InvoiceService(
 
             else -> invoices.map { invoiceMapper.toScanResponse(it) }
         }
-        return PostInvoiceScan.Response(response)
     }
 
     fun getInvoice(

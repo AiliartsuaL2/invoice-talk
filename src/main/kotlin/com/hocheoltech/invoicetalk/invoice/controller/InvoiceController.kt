@@ -61,7 +61,7 @@ class InvoiceController(
         userId: Long,
         @Valid @RequestBody
         request: PostInvoiceScan.Request,
-    ): ResponseEntity<PostInvoiceScan.Response> {
+    ): ResponseEntity<List<PostInvoiceScan.Response>> {
         return ResponseEntity.ok(invoiceService.scanInvoice(userId, request))
     }
 

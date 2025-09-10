@@ -25,7 +25,7 @@ class InvoiceRepositoryImpl(
             invoice.status.eq(status),
             invoice.number.eq(number),
             invoiceId?.let { invoice.id.eq(it) },
-        ).fetch()
+        ).orderBy(invoice.scannedAt.desc()).fetch()
     }
 
     override fun findInvoiceCountByStatus(userId: Long): List<GetInvoiceCount.QueryResult> {
@@ -34,10 +34,7 @@ class InvoiceRepositoryImpl(
                 invoice.status,
                 invoice.count(),
             )
-        ).from(invoice)
-            .where(invoice.user.id.eq(userId))
-            .groupBy(invoice.status)
-            .fetch()
+        ).from(invoice).where(invoice.user.id.eq(userId)).groupBy(invoice.status).fetch()
     }
 
     override fun existsSameNumber(
@@ -46,10 +43,7 @@ class InvoiceRepositoryImpl(
         courierName: String,
         number: String,
     ): Boolean {
-        val data = jpaQueryFactory
-            .select(invoice)
-            .from(invoice)
-            .where(
+        val data = jpaQueryFactory.select(invoice).from(invoice).where(
                 invoice.user.id.eq(userId),
                 invoice.courierName.eq(courierName),
                 invoice.number.eq(number),

@@ -37,18 +37,15 @@ class PostInvoiceScan {
     }
 
     data class Response(
-        val invoiceInfo: List<InvoiceInfo>
-    ) {
-        data class InvoiceInfo(
-            val id: Long,
-            val status: InvoiceStatus,
-            val courierName: String,
-            val number: String,
-            val productName: String,
-            val receiveAddress: String,
-            val receiverName: String,
-            val scannedAt: LocalDateTime?,
-            val createdAt: LocalDateTime,
-        )
-    }
+        val id: Long,
+        val status: InvoiceStatus,
+        val courierName: String,
+        val number: String,
+        val productName: String,
+        val receiveAddress: String,
+        val receiverName: String,
+        val sendAddress: String,
+        val scannedAt: LocalDateTime?,
+        val createdAt: LocalDateTime,
+    )
 }
