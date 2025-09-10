@@ -45,6 +45,8 @@ class PostInvoiceScan {
             val courierName: String,
             val number: String,
             val productName: String,
+            val receiveAddress: String,
+            val receiverName: String,
             val scannedAt: LocalDateTime?,
             val createdAt: LocalDateTime,
         )

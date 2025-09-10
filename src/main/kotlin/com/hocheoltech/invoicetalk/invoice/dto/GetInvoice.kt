@@ -2,6 +2,7 @@ package com.hocheoltech.invoicetalk.invoice.dto
 
 import com.hocheoltech.invoicetalk.global.anotation.NotNullEnum
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
+import com.hocheoltech.invoicetalk.invoice.entity.Invoice
 import jakarta.validation.constraints.Min
 import org.jetbrains.annotations.NotNull
 import org.springframework.data.domain.PageRequest
@@ -24,20 +25,15 @@ class GetInvoice {
         }
 
         fun toInvoiceStatus(): Set<InvoiceStatus> {
-            return when(this.status!!) {
-                StatusType.ALL -> {
+            return when (this.status!!) {
+                StatusType.ALL, StatusType.PROCESSED -> {
                     setOf(
                         InvoiceStatus.PENDING,
                         InvoiceStatus.SUCCESS,
                         InvoiceStatus.ERROR,
                     )
                 }
-                StatusType.PROCESSED -> {
-                    setOf(
-                        InvoiceStatus.SUCCESS,
-                        InvoiceStatus.ERROR,
-                    )
-                }
+
                 StatusType.PENDING -> setOf(InvoiceStatus.PENDING)
                 StatusType.SUCCESS -> setOf(InvoiceStatus.SUCCESS)
                 StatusType.ERROR -> setOf(InvoiceStatus.ERROR)
@@ -55,7 +51,7 @@ class GetInvoice {
 
     data class Response(
         val id: Long,
-        val status: InvoiceStatus,
+        val status: ResponseStatus,
         val courierName: String,
         val number: String,
         val productName: String,
@@ -66,4 +62,28 @@ class GetInvoice {
         val createdAt: LocalDateTime,
         val updatedAt: LocalDateTime?,
     )
+
+    enum class ResponseStatus {
+        PENDING,
+        SUCCESS,
+        CANCELED,
+        ERROR;
+
+        companion object {
+            @JvmStatic
+            fun from(invoice: Invoice): ResponseStatus {
+                return when (invoice.status) {
+                    InvoiceStatus.PENDING -> {
+                        if (invoice.histories.isEmpty()) {
+                            PENDING
+                        } else {
+                            CANCELED
+                        }
+                    }
+                    InvoiceStatus.SUCCESS -> SUCCESS
+                    InvoiceStatus.ERROR -> ERROR
+                }
+            }
+        }
+    }
 }

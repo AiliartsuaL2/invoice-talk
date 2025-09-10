@@ -72,7 +72,7 @@ class InvoiceService(
         userId: Long,
         request: GetInvoice.Request
     ): List<GetInvoice.Response> {
-        return invoiceRepository.findByUserIdAndStatusInOrderByCreatedAtDesc(
+        return invoiceRepository.findWithHistoryByUserIdAndStatusInOrderByCreatedAtDesc(
             userId,
             request.toInvoiceStatus(),
             request.toPageable(),

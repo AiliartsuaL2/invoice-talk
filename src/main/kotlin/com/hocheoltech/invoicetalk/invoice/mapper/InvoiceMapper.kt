@@ -18,6 +18,8 @@ interface InvoiceMapper {
         request: PutInvoice.Request,
         @Context user: User,
     ): Invoice
+
+    @Mapping(target = "status", expression = """java(GetInvoice.ResponseStatus.from(invoice))""")
     fun toResponse(invoice: Invoice): GetInvoice.Response
 
     fun toScanResponse(invoice: Invoice): PostInvoiceScan.Response.InvoiceInfo
