@@ -3,6 +3,7 @@ package com.hocheoltech.invoicetalk.invoice.repository.custom
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.invoice.dto.GetInvoiceCount
 import com.hocheoltech.invoicetalk.invoice.entity.Invoice
+import org.springframework.data.domain.Pageable
 
 interface CustomInvoiceRepository {
     fun findForScan(
@@ -22,4 +23,11 @@ interface CustomInvoiceRepository {
         courierName: String,
         number: String,
     ): Boolean
+
+    fun findByUserIdAndStatusIn(
+        userId: Long,
+        status: Set<InvoiceStatus>,
+        pageable: Pageable,
+        isProcessed: Boolean,
+    ): List<Invoice>
 }

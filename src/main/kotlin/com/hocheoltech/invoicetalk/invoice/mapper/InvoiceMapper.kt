@@ -2,6 +2,7 @@ package com.hocheoltech.invoicetalk.invoice.mapper
 
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.invoice.dto.GetInvoice
+import com.hocheoltech.invoicetalk.invoice.dto.GetProcessedInvoice
 import com.hocheoltech.invoicetalk.invoice.dto.PutInvoice
 import com.hocheoltech.invoicetalk.invoice.dto.PostInvoiceScan
 import com.hocheoltech.invoicetalk.invoice.entity.Invoice
@@ -23,11 +24,10 @@ abstract class InvoiceMapper {
         @Context user: User,
     ): Invoice
 
-    @Mapping(target = "status", expression = """java(GetInvoice.ResponseStatus.from(invoice))""")
     abstract fun toResponse(invoice: Invoice): GetInvoice.Response
 
-    @Mapping(target = "status", expression = """java(GetInvoice.ResponseStatus.from(invoice, statusType))""")
-    abstract fun toResponse(invoice: Invoice, statusType: GetInvoice.Request.StatusType): GetInvoice.Response
+    @Mapping(target = "status", expression = """java(GetProcessedInvoice.ResponseStatus.from(invoice))""")
+    abstract fun toProcessedResponse(invoice: Invoice): GetProcessedInvoice.Response
 
     abstract fun toScanResponse(invoice: Invoice): PostInvoiceScan.Response
 

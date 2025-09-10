@@ -4,6 +4,7 @@ import com.hocheoltech.invoicetalk.global.enums.ExcelUploadType
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
 import com.hocheoltech.invoicetalk.invoice.dto.*
+import com.hocheoltech.invoicetalk.invoice.entity.Invoice
 import com.hocheoltech.invoicetalk.invoice.excel.Cafe24ExcelUploader
 import com.hocheoltech.invoicetalk.invoice.excel.CoupangExcelUploader
 import com.hocheoltech.invoicetalk.invoice.excel.NaverExcelUploader
@@ -11,6 +12,8 @@ import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceMapper
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceStatusHistoryMapper
 import com.hocheoltech.invoicetalk.invoice.repository.InvoiceRepository
 import com.hocheoltech.invoicetalk.user.repository.UserRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -93,11 +96,23 @@ class InvoiceService(
         userId: Long,
         request: GetInvoice.Request
     ): List<GetInvoice.Response> {
-        return invoiceRepository.findWithHistoryByUserIdAndStatusInOrderByCreatedAtDesc(
-            userId,
-            request.toInvoiceStatus(),
-            request.toPageable(),
-        ).map { invoiceMapper.toResponse(it, request.status!!) }
+        return invoiceRepository.findByUserIdAndStatusIn(
+            userId = userId,
+            status = request.toInvoiceStatus(),
+            pageable = request.toPageable(),
+            isProcessed = false,
+        ).map { invoiceMapper.toResponse(it) }
+    }
+
+    // 최근 처리된 항목
+    fun getProcessedInvoices(userId: Long): List<GetProcessedInvoice.Response> {
+        val status = setOf(InvoiceStatus.SUCCESS, InvoiceStatus.ERROR, InvoiceStatus.PENDING)
+        return invoiceRepository.findByUserIdAndStatusIn(
+            userId = userId,
+            status = status,
+            pageable = PageRequest.of(0, 3),
+            isProcessed = true,
+        ).map { invoiceMapper.toProcessedResponse(it) }
     }
 
     /**

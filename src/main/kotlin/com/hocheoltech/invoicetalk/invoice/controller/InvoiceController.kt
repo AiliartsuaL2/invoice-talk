@@ -56,6 +56,15 @@ class InvoiceController(
         return ResponseEntity.ok(invoiceService.getInvoices(userId, request))
     }
 
+    // 송장 내역 리스트 조회
+    @GetMapping("/api/v1/invoices/processed")
+    fun getInvoices(
+        @RequestHeader(value = "user-id")
+        userId: Long,
+    ): ResponseEntity<List<GetProcessedInvoice.Response>> {
+        return ResponseEntity.ok(invoiceService.getProcessedInvoices(userId))
+    }
+
     // 스캔
     @PostMapping("/api/v1/invoices/scan")
     fun scanInvoice(

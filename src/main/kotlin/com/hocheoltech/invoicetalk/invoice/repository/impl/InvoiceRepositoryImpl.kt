@@ -6,7 +6,11 @@ import com.hocheoltech.invoicetalk.invoice.dto.QGetInvoiceCount_QueryResult
 import com.hocheoltech.invoicetalk.invoice.entity.Invoice
 import com.hocheoltech.invoicetalk.invoice.entity.QInvoice.invoice
 import com.hocheoltech.invoicetalk.invoice.repository.custom.CustomInvoiceRepository
+import com.querydsl.core.types.Order
+import com.querydsl.core.types.OrderSpecifier
+import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 
 class InvoiceRepositoryImpl(
@@ -52,5 +56,38 @@ class InvoiceRepositoryImpl(
                 },
             ).fetchFirst()
         return data != null
+    }
+
+    override fun findByUserIdAndStatusIn(
+        userId: Long,
+        status: Set<InvoiceStatus>,
+        pageable: Pageable,
+        isProcessed: Boolean,
+    ): List<Invoice> {
+        return jpaQueryFactory.selectFrom(invoice)
+            .where(
+                invoice.user.id.eq(userId),
+                invoice.status.`in`(status),
+                scannedAtIsNull(isProcessed)
+            ).orderBy(getOrder(isProcessed))
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetch()
+    }
+
+    private fun scannedAtIsNull(isProcessed: Boolean): BooleanExpression? {
+        return if (isProcessed) {
+            invoice.scannedAt.isNotNull
+        } else {
+            null
+        }
+    }
+
+    private fun getOrder(isProcessed: Boolean): OrderSpecifier<LocalDateTime> {
+        return if (isProcessed) {
+            invoice.createdAt.desc()
+        } else {
+            invoice.scannedAt.desc()
+        }
     }
 }
