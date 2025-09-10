@@ -20,779 +20,132 @@
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 25px rgba(0,0,0,0.12);
 
-            /* Status Colors - Pastel Tones */
             --status-pending-bg: #fff8e1;
             --status-pending-color: #ef6c00;
-            --status-pending-border: #ffcc02;
 
             --status-success-bg: #e8f5e8;
             --status-success-color: #2e7d32;
-            --status-success-border: #4caf50;
 
             --status-error-bg: #ffebee;
             --status-error-color: #c62828;
-            --status-error-border: #f44336;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * {box-sizing: border-box; margin: 0; padding: 0;}
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            line-height: 1.5;
-            font-size: 14px;
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            background: var(--bg); color: var(--text-primary);
+            line-height: 1.5; font-size: 14px;
         }
-
-        /* Header */
-        .header {
-            background: var(--card);
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+        .header {background: var(--card); padding: 20px 24px;
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-sm);}
+        .header-inner {max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;}
+        .brand {display: flex; align-items: center; gap: 12px;}
+        .logo-badge {width: 48px; height: 48px; border-radius: 12px;
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .brand h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-        }
-
-        .brand .sub {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .user-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .logout-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-secondary);
-        }
-
-        .logout-btn:hover {
-            background: var(--border-light);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 32px auto;
-            padding: 0 24px;
-        }
-
-        .dashboard-top {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 24px;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-        }
-
-        .title {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .title .big {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-
-        .title .sub {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* Stats Pills */
-        .pills {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .pill {
-            background: var(--card);
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 100px;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-        }
-
-        .pill:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .pill .num {
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--text-primary);
-        }
-
-        .pill .lbl {
-            font-size: 13px;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
-        .pill.pending .num, .pill.pending .lbl {
-            color: var(--status-pending-color);
-        }
-
-        .pill.success .num, .pill.success .lbl {
-            color: var(--status-success-color);
-        }
-
-        .pill.error .num, .pill.error .lbl {
-            color: var(--status-error-color);
-        }
-
-        .pill.total .num, .pill.total .lbl {
-            color: var(--accent-blue);
-        }
-
-        /* Actions */
-        .actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            border: 0;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 18px; box-shadow: var(--shadow-sm);}
+        .brand h1 {font-size: 20px; font-weight: 700; color: var(--text-primary);}
+        .brand .sub {font-size: 13px; color: var(--text-secondary); margin-top: 2px;}
+        .user-area {display: flex; align-items: center; gap: 12px; color: var(--text-secondary); font-weight: 500;}
+        .logout-btn {background: transparent; border: 1px solid var(--border);
+            padding: 8px 16px; border-radius: 8px; font-weight: 500; cursor: pointer;
+            transition: all 0.2s ease; color: var(--text-secondary);}
+        .logout-btn:hover {background: var(--border-light);}
+        .container {max-width: 1200px; margin: 32px auto; padding: 0 24px;}
+        .dashboard-top {background: var(--card); border-radius: var(--radius); padding: 32px;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;}
+        .title {display: flex; flex-direction: column; gap: 4px;}
+        .title .big {font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1.2;}
+        .title .sub {font-size: 14px; color: var(--text-secondary);}
+        .pills {display: flex; gap: 12px; align-items: center; flex-wrap: wrap;}
+        .pill {background: var(--card); padding: 16px 20px; border-radius: 12px; border: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; min-width: 100px; cursor: pointer; box-shadow: var(--shadow-sm); transition: all 0.2s ease;}
+        .pill:hover {transform: translateY(-2px); box-shadow: var(--shadow-md);}
+        .pill .num {font-weight: 700; font-size: 20px; color: var(--text-primary);}
+        .pill .lbl {font-size: 13px; margin-top: 4px; font-weight: 600;}
+        .pill.pending .num, .pill.pending .lbl {color: var(--status-pending-color);}
+        .pill.success .num, .pill.success .lbl {color: var(--status-success-color);}
+        .pill.error .num, .pill.error .lbl {color: var(--status-error-color);}
+        .pill.total .num, .pill.total .lbl {color: var(--accent-blue);}
+        .actions {display: flex; gap: 12px; align-items: center; flex-wrap: wrap;}
+        .btn {border: 0; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer;
+            display: inline-flex; gap: 8px; align-items: center; justify-content: center; transition: all 0.2s ease; font-size: 14px; text-decoration: none;}
+        .btn:disabled {opacity: 0.5; cursor: not-allowed;}
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-secondary {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: var(--border-light);
-        }
-
-        .btn-danger {
-            background: var(--status-error-bg);
-            color: var(--status-error-color);
-            border: 1px solid rgba(244, 67, 54, 0.2);
-        }
-
-        .btn-danger:hover:not(:disabled) {
-            background: #ffcdd2;
-        }
-
-        .btn-download {
-            background: var(--status-success-bg);
-            color: var(--status-success-color);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-        }
-
-        .btn-download:hover:not(:disabled) {
-            background: #c8e6c9;
-        }
-
-        /* Status Labels */
-        .status-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            border: 1px solid;
-        }
-
-        .status-PENDING {
-            background: var(--status-pending-bg);
-            color: var(--status-pending-color);
-            border-color: rgba(255, 204, 2, 0.3);
-        }
-
-        .status-SUCCESS {
-            background: var(--status-success-bg);
-            color: var(--status-success-color);
-            border-color: rgba(76, 175, 80, 0.3);
-        }
-
-        .status-ERROR {
-            background: var(--status-error-bg);
-            color: var(--status-error-color);
-            border-color: rgba(244, 67, 54, 0.3);
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-
-        .status-PENDING .status-dot {
-            background: var(--status-pending-color);
-        }
-
-        .status-SUCCESS .status-dot {
-            background: var(--status-success-color);
-        }
-
-        .status-ERROR .status-dot {
-            background: var(--status-error-color);
-        }
-
-        /* List Card */
-        .list-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        .list-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card);
-        }
-
-        .list-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .list-title h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .list-subtitle {
-            font-size: 13px;
-            color: var(--text-tertiary);
-        }
-
-        .search-area {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .search {
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            padding: 10px 16px;
-            background: var(--card);
-            width: 280px;
-            font-size: 14px;
-            transition: border-color 0.2s ease;
-        }
-
-        .search:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-        }
-
-        .search::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        /* Table */
-        .table-header {
-            display: grid;
-            grid-template-columns: 2fr 120px 1.5fr 1.2fr 1.2fr;
-            gap: 16px;
-            padding: 16px 24px;
-            background: var(--border-light);
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .table-body {
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 2fr 120px 1.5fr 1.2fr 1.2fr;
-            gap: 16px;
-            padding: 20px 24px;
-            align-items: center;
-            border-bottom: 1px solid var(--border-light);
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-
-        .row:hover {
-            background: rgba(49, 130, 246, 0.04);
-        }
-
-        .row:last-child {
-            border-bottom: none;
-        }
-
-        .cell-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 15px;
-            line-height: 1.4;
-        }
-
-        .cell-sub {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        .cell-muted {
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Loading & Empty */
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            border-top: 2px solid var(--accent-blue);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .empty {
-            padding: 60px;
-            text-align: center;
-            color: var(--text-tertiary);
-            font-size: 15px;
-        }
-
-        /* 무한스크롤 로딩 표시 */
-        .infinite-loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 20px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .no-more-data {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-tertiary);
-            font-size: 14px;
-            border-top: 1px solid var(--border-light);
-        }
-
-        /* Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-panel {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 0;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card);
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .modal-close {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-        }
-
-        .modal-close:hover {
-            background: var(--border-light);
-        }
-
-        .modal-body {
-            padding: 24px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .modal-footer {
-            padding: 20px 24px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            background: var(--card);
-        }
-
-        /* Detail Modal Specific */
-        .detail-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 32px 0 40px;
-        }
-
-        .detail-status-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .detail-status-icon.pending {
-            background: var(--status-pending-bg);
-        }
-
-        .detail-status-icon.success {
-            background: var(--status-success-bg);
-        }
-
-        .detail-status-icon.error {
-            background: var(--status-error-bg);
-        }
-
-        .detail-status-content {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .detail-status-text {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .detail-status-text.pending {
-            color: var(--status-pending-color);
-        }
-
-        .detail-status-text.success {
-            color: var(--status-success-color);
-        }
-
-        .detail-status-text.error {
-            color: var(--status-error-color);
-        }
-
-        .detail-status-sub {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .detail-prop {
-            background: var(--border-light);
-            padding: 16px;
-            border-radius: 12px;
-        }
-
-        .detail-prop-label {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-bottom: 8px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .detail-prop-value {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 15px;
-            word-break: break-word;
-        }
-
-        /* Form */
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .form-input, .form-select {
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            font-size: 14px;
-            transition: border-color 0.2s ease;
-            background: var(--card);
-        }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-        }
-
-        .form-input::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        .form-select {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7684' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 12px center;
-            background-repeat: no-repeat;
-            background-size: 16px;
-            padding-right: 40px;
-            appearance: none;
-        }
-
-        /* File Upload */
-        .file-upload-area {
-            border: 2px dashed var(--border);
-            padding: 40px 20px;
-            border-radius: 12px;
-            text-align: center;
-            background: var(--border-light);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .file-upload-area:hover {
-            border-color: var(--accent-blue);
-            background: rgba(49, 130, 246, 0.04);
-        }
-
-        .file-upload-area.dragging {
-            border-color: var(--accent-blue);
-            background: rgba(49, 130, 246, 0.08);
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .row, .table-header {
-                grid-template-columns: 1.5fr 100px 1fr 1fr 1fr;
-            }
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 16px;
-            }
-            .dashboard-top {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 20px;
-            }
-            .pills {
-                justify-content: center;
-            }
-            .actions {
-                justify-content: center;
-            }
-            .search {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .row, .table-header {
-                grid-template-columns: 1fr;
-                gap: 12px;
-                padding: 16px 20px;
-            }
-            .table-header {
-                display: none;
-            }
-            .row .cell:nth-child(n+3) {
-                display: none;
-            }
-            .modal-panel {
-                margin: 16px;
-            }
-            .dashboard-top {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 24px 20px;
-            }
-            .detail-status {
-                flex-direction: column;
-                text-align: center;
-            }
-            .detail-status-icon {
-                margin-right: 0;
-                margin-bottom: 16px;
-            }
-        }
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; box-shadow: var(--shadow-sm);}
+        .btn-primary:hover:not(:disabled) {transform: translateY(-1px); box-shadow: var(--shadow-md);}
+        .btn-secondary {background: var(--card); border: 1px solid var(--border); color: var(--text-primary);}
+        .btn-secondary:hover:not(:disabled) {background: var(--border-light);}
+        .btn-danger {background: var(--status-error-bg); color: var(--status-error-color); border: 1px solid rgba(244, 67, 54, 0.2);}
+        .btn-danger:hover:not(:disabled) {background: #ffcdd2;}
+        .btn-download {background: var(--status-success-bg); color: var(--status-success-color); border: 1px solid rgba(76, 175, 80, 0.2);}
+        .btn-download:hover:not(:disabled) {background: #c8e6c9;}
+        .status-label {display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid;}
+        .status-PENDING {background: var(--status-pending-bg); color: var(--status-pending-color);}
+        .status-SUCCESS {background: var(--status-success-bg); color: var(--status-success-color);}
+        .status-ERROR {background: var(--status-error-bg); color: var(--status-error-color);}
+        .status-dot {width: 6px; height: 6px; border-radius: 50%;}
+        .status-PENDING .status-dot {background: var(--status-pending-color);}
+        .status-SUCCESS .status-dot {background: var(--status-success-color);}
+        .status-ERROR .status-dot {background: var(--status-error-color);}
+        .list-card {background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; border: 1px solid var(--border);}
+        .list-header {padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--card);}
+        .list-title {display: flex; align-items: center; gap: 12px;}
+        .list-title h3 {font-size: 18px; font-weight: 700; color: var(--text-primary);}
+        .list-subtitle {font-size: 13px; color: var(--text-tertiary);}
+        .search-area {display: flex; gap: 12px; align-items: center;}
+        .search {border-radius: 10px; border: 1px solid var(--border); padding: 10px 16px; background: var(--card); width: 280px; font-size: 14px; transition: border-color 0.2s ease;}
+        .search:focus {outline: none; border-color: var(--accent-blue);}
+        .search::placeholder {color: var(--text-tertiary);}
+        .table-header {display: grid; grid-template-columns: 2fr 120px 1.5fr 1.2fr 1.2fr; gap: 16px; padding: 16px 24px; background: var(--border-light); border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
+        .table-body {max-height: 60vh; overflow-y: auto;}
+        .row {display: grid; grid-template-columns: 2fr 120px 1.5fr 1.2fr 1.2fr; gap: 16px; padding: 20px 24px; align-items: center; border-bottom: 1px solid var(--border-light); cursor: pointer; transition: background 0.15s ease;}
+        .row:hover {background: rgba(49, 130, 246, 0.04);}
+        .row:last-child {border-bottom: none;}
+        .cell-title {font-weight: 600; color: var(--text-primary); font-size: 15px; line-height: 1.4;}
+        .cell-sub {font-size: 13px; color: var(--text-secondary); margin-top: 4px;}
+        .cell-muted {font-size: 14px; color: var(--text-secondary); font-weight: 500;}
+        .loading {display: flex; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--text-secondary);}
+        .spinner {width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); border-top: 2px solid var(--accent-blue); animation: spin 1s linear infinite;}
+        @keyframes spin {to { transform: rotate(360deg); }}
+        .empty {padding: 60px; text-align: center; color: var(--text-tertiary); font-size: 15px;}
+        .infinite-loading {display: flex; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: var(--text-secondary); font-size: 14px;}
+        .no-more-data {text-align: center; padding: 20px; color: var(--text-tertiary); font-size: 14px; border-top: 1px solid var(--border-light);}
+        .modal {display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1000; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px);}
+        .modal.show {display: flex;}
+        .modal-panel {background: var(--card); border-radius: var(--radius); padding: 0; width: 100%; max-width: 600px; box-shadow: var(--shadow-lg); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;}
+        .modal-header {padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--card);}
+        .modal-title {font-size: 20px; font-weight: 700; color: var(--text-primary);}
+        .modal-close {width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease;}
+        .modal-close:hover {background: var(--border-light);}
+        .modal-body {padding: 24px; overflow-y: auto; flex: 1;}
+        .modal-footer {padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: var(--card);}
+        .detail-status {display: flex; align-items: center; justify-content: center; margin: 32px 0 40px;}
+        .detail-status-icon {width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: var(--shadow-sm);}
+        .detail-status-icon.pending {background: var(--status-pending-bg);}
+        .detail-status-icon.success {background: var(--status-success-bg);}
+        .detail-status-icon.error {background: var(--status-error-bg);}
+        .detail-status-content {display: flex; flex-direction: column; gap: 8px;}
+        .detail-status-text {font-size: 24px; font-weight: 700;}
+        .detail-status-text.pending {color: var(--status-pending-color);}
+        .detail-status-text.success {color: var(--status-success-color);}
+        .detail-status-text.error {color: var(--status-error-color);}
+        .detail-status-sub {font-size: 14px; color: var(--text-secondary);}
+        .detail-grid {display: grid; grid-template-columns: 1fr 1fr; gap: 16px;}
+        .detail-prop {background: var(--border-light); padding: 16px; border-radius: 12px;}
+        .detail-prop-label {font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+        .detail-prop-value {font-weight: 600; color: var(--text-primary); font-size: 15px; word-break: break-word;}
+        .form-row {display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;}
+        .form-label {font-size: 14px; font-weight: 600; color: var(--text-primary);}
+        .form-input, .form-select {padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; transition: border-color 0.2s ease; background: var(--card);}
+        .form-input:focus, .form-select:focus {outline: none; border-color: var(--accent-blue);}
+        .form-input::placeholder {color: var(--text-tertiary);}
+        .form-select {cursor: pointer; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7684' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e"); background-position: right 12px center; background-repeat: no-repeat; background-size: 16px; padding-right: 40px; appearance: none;}
+        .file-upload-area {border: 2px dashed var(--border); padding: 40px 20px; border-radius: 12px; text-align: center; background: var(--border-light); cursor: pointer; transition: all 0.2s ease;}
+        .file-upload-area:hover {border-color: var(--accent-blue); background: rgba(49, 130, 246, 0.04);}
+        .file-upload-area.dragging {border-color: var(--accent-blue); background: rgba(49, 130, 246, 0.08);}
+        @media (max-width: 900px) {.row, .table-header {grid-template-columns: 1.5fr 100px 1fr 1fr 1fr;} .detail-grid {grid-template-columns: 1fr;}}
+        @media (max-width: 768px) {.container {padding: 0 16px;} .dashboard-top {flex-direction: column; align-items: stretch; gap: 20px;} .pills {justify-content: center;} .actions {justify-content: center;} .search {width: 100%;}}
+        @media (max-width: 520px) {.row, .table-header {grid-template-columns: 1fr; gap: 12px; padding: 16px 20px;} .table-header {display: none;} .row .cell:nth-child(n+3) {display: none;} .modal-panel {margin: 16px;} .dashboard-top {flex-direction: column; align-items: stretch; padding: 24px 20px;} .detail-status {flex-direction: column; text-align: center;} .detail-status-icon {margin-right: 0; margin-bottom: 16px;}}
     </style>
 </head>
 <body>
@@ -819,7 +172,6 @@
             <div class="big">송장 관리</div>
             <div class="sub">상태를 클릭하면 상태별 내역을 조회 할 수 있어요</div>
         </div>
-
         <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-end;">
             <div class="pills" id="pillsContainer">
                 <div class="pill total" onclick="loadInvoiceList('ALL')">
@@ -839,9 +191,8 @@
                     <div class="lbl">에러</div>
                 </div>
             </div>
-
             <div class="actions">
-                <button class="btn btn-download" onclick="downloadExcel()">
+                <button class="btn btn-download" onclick="downloadExcelFront()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -868,24 +219,20 @@
             </div>
         </div>
     </div>
-
     <div class="list-card" role="region" aria-label="송장 목록">
         <div class="list-header">
             <div class="list-title">
                 <h3>송장 내역</h3>
                 <span class="list-subtitle">클릭하여 상세 보기</span>
             </div>
-
             <div class="search-area">
                 <input class="search" id="searchInput" placeholder="상품명, 송장번호, 받는사람 검색" oninput="applySearch()" />
             </div>
         </div>
-
         <div id="tableLoading" class="loading" style="display:none">
             <div class="spinner"></div>
             <div>불러오는 중…</div>
         </div>
-
         <div class="table-header">
             <div>상품명</div>
             <div>상태</div>
@@ -893,26 +240,15 @@
             <div>수신자</div>
             <div>생성일시</div>
         </div>
-
-        <div class="table-body" id="invoiceTableBody">
-            <!-- rows injected here -->
-        </div>
-
-        <!-- 무한스크롤 로딩 표시 -->
+        <div class="table-body" id="invoiceTableBody"></div>
         <div id="infiniteLoading" class="infinite-loading" style="display:none">
             <div class="spinner"></div>
             <div>더 많은 데이터를 불러오는 중…</div>
         </div>
-
-        <!-- 더 이상 데이터가 없을 때 표시 -->
-        <div id="noMoreData" class="no-more-data" style="display:none">
-            더 이상 불러올 데이터가 없어요
-        </div>
-
+        <div id="noMoreData" class="no-more-data" style="display:none">더 이상 불러올 데이터가 없어요</div>
         <div id="emptyState" class="empty" style="display:none">등록된 송장이 없어요</div>
     </div>
 </main>
-
 <!-- 상세 모달 -->
 <div id="detailModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true">
@@ -920,21 +256,15 @@
             <div class="modal-title">송장 상세</div>
             <button class="modal-close" onclick="closeModal('detailModal')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
         </div>
-
         <div class="modal-body">
-            <div class="detail-status" id="detailStatusArea">
-                <!-- status label injected -->
-            </div>
-
-            <div class="detail-grid" id="detailBody">
-                <!-- props injected -->
-            </div>
+            <div class="detail-status" id="detailStatusArea"></div>
+            <div class="detail-grid" id="detailBody"></div>
         </div>
-
         <div class="modal-footer">
             <button class="btn btn-danger" id="deleteBtn" onclick="deleteInvoice()">삭제</button>
             <button class="btn btn-secondary" onclick="openEditModal()">수정</button>
@@ -942,7 +272,6 @@
         </div>
     </div>
 </div>
-
 <!-- 추가/수정 모달 -->
 <div id="invoiceModal" class="modal" aria-hidden="true">
     <div class="modal-panel" style="max-width: 500px;">
@@ -950,54 +279,52 @@
             <div class="modal-title" id="modalTitle">송장 추가</div>
             <button class="modal-close" onclick="closeModal('invoiceModal')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
         </div>
-
         <div class="modal-body">
             <form id="invoiceForm">
                 <input type="hidden" id="invoiceId" name="id" />
-
                 <div class="form-row">
                     <label class="form-label">택배회사</label>
-                    <input type="text" id="courierName" name="courierName" class="form-input" placeholder="예: CJ대한통운" required />
+                    <input type="text" id="courierName" name="courierName" class="form-input"
+                           placeholder="예: CJ대한통운" required />
                 </div>
-
                 <div class="form-row">
                     <label class="form-label">송장번호</label>
-                    <input type="text" id="number" name="number" class="form-input" placeholder="송장번호를 입력하세요" required />
+                    <input type="text" id="number" name="number" class="form-input"
+                           placeholder="송장번호를 입력하세요" required />
                 </div>
-
                 <div class="form-row">
                     <label class="form-label">상품명</label>
-                    <input type="text" id="productName" name="productName" class="form-input" placeholder="상품명을 입력하세요" required />
+                    <input type="text" id="productName" name="productName" class="form-input"
+                           placeholder="상품명을 입력하세요" required />
                 </div>
-
                 <div class="form-row">
                     <label class="form-label">보내는 주소</label>
-                    <input type="text" id="sendAddress" name="sendAddress" class="form-input" placeholder="발송지 주소를 입력하세요" required />
+                    <input type="text" id="sendAddress" name="sendAddress" class="form-input"
+                           placeholder="발송지 주소를 입력하세요" required />
                 </div>
-
                 <div class="form-row">
                     <label class="form-label">받는 주소</label>
-                    <input type="text" id="receiveAddress" name="receiveAddress" class="form-input" placeholder="배송지 주소를 입력하세요" required />
+                    <input type="text" id="receiveAddress" name="receiveAddress" class="form-input"
+                           placeholder="배송지 주소를 입력하세요" required />
                 </div>
-
                 <div class="form-row">
                     <label class="form-label">받는 사람</label>
-                    <input type="text" id="receiverName" name="receiverName" class="form-input" placeholder="수령인 이름을 입력하세요" required />
+                    <input type="text" id="receiverName" name="receiverName" class="form-input"
+                           placeholder="수령인 이름을 입력하세요" required />
                 </div>
             </form>
         </div>
-
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" onclick="closeModal('invoiceModal')">취소</button>
             <button type="submit" form="invoiceForm" class="btn btn-primary" id="submitBtn">저장</button>
         </div>
     </div>
 </div>
-
 <!-- 엑셀 업로드 모달 -->
 <div id="excelModal" class="modal" aria-hidden="true">
     <div class="modal-panel" style="max-width: 520px;">
@@ -1005,11 +332,11 @@
             <div class="modal-title">엑셀 업로드</div>
             <button class="modal-close" onclick="closeModal('excelModal')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
         </div>
-
         <div class="modal-body">
             <form id="excelForm" enctype="multipart/form-data">
                 <div class="form-row">
@@ -1022,27 +349,34 @@
                         <option value="AUCTION_GMARKET">옥션, 지마켓</option>
                     </select>
                 </div>
-
                 <div class="form-row">
                     <label class="form-label">파일 선택</label>
                     <div class="file-upload-area" onclick="document.getElementById('excelFile').click()">
-                        <input type="file" id="excelFile" name="file" accept=".xlsx,.xls" style="display:none" onchange="handleFileSelect(event)" />
+                        <input type="file" id="excelFile" name="file" accept=".xlsx,.xls" style="display:none"
+                               onchange="handleFileSelect(event)" />
                         <div id="uploadText">
                             <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 8px; vertical-align: middle;">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                     style="margin-right: 8px; vertical-align: middle;">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                          stroke="currentColor" stroke-width="2"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 엑셀 파일 업로드
                             </div>
-                            <div style="font-size: 14px; color: var(--text-secondary);">파일을 선택하거나 여기로 드래그하세요</div>
-                            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">.xlsx, .xls 파일만 지원</div>
+                            <div style="font-size: 14px; color: var(--text-secondary);">
+                                파일을 선택하거나 여기로 드래그하세요
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">
+                                .xlsx, .xls 파일만 지원
+                            </div>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
-
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" onclick="closeModal('excelModal')">취소</button>
             <button type="submit" form="excelForm" class="btn btn-primary" id="excelUploadBtn">업로드</button>
@@ -1050,39 +384,27 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-    // 현재 선택된 송장 ID 저장
     let currentInvoiceId = null;
-
-    // 무한스크롤 관련 변수들
     let currentPage = 1;
     let currentStatus = 'ALL';
     let isLoading = false;
     let hasMoreData = true;
-    let allInvoicesData = []; // 모든 로드된 데이터
+    let allInvoicesData = [];
     let isSearching = false;
     let searchQuery = '';
 
-    // 유틸리티 함수
     function getAuthHeaders() {
         const userId = localStorage.getItem('userId');
-        return {
-            'Content-Type': 'application/json',
-            'user-id': userId
-        };
+        return {'Content-Type': 'application/json', 'user-id': userId};
     }
-
     function escapeHtml(str) {
         if (str === null || str === undefined) return '';
         return String(str).replace(/[&<>"']/g, s => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
         }[s]));
     }
-
     function getStatusText(status) {
         switch(status) {
             case 'PENDING': return '대기';
@@ -1091,16 +413,10 @@
             default: return status || '-';
         }
     }
-
     function getStatusLabel(status) {
         const statusText = getStatusText(status);
-        return `<span class="status-label status-${status || 'PENDING'}">
-            <span class="status-dot"></span>
-            ${statusText}
-        </span>`;
+        return `<span class="status-label status-${status||'PENDING'}"><span class="status-dot"></span>${statusText}</span>`;
     }
-
-    // 초기화
     document.addEventListener('DOMContentLoaded', () => {
         const userId = localStorage.getItem('userId');
         if (!userId) {
@@ -1112,21 +428,13 @@
         if (username) {
             document.getElementById('usernameDisplay').textContent = username + '님';
         }
-
-        // 무한스크롤 이벤트 리스너 등록
         setupInfiniteScroll();
-
         loadDashboardData();
     });
-
-    // 무한스크롤 설정
     function setupInfiniteScroll() {
         const tableBody = document.getElementById('invoiceTableBody');
-
         tableBody.addEventListener('scroll', () => {
             const { scrollTop, scrollHeight, clientHeight } = tableBody;
-
-            // 스크롤이 하단에 근접했을 때 (90% 지점)
             if (scrollTop + clientHeight >= scrollHeight * 0.9) {
                 if (!isLoading && hasMoreData && !isSearching) {
                     loadMoreInvoices();
@@ -1134,17 +442,13 @@
             }
         });
     }
-
-    // 대시보드 데이터 로드
     function loadDashboardData() {
         loadCountData();
         loadInvoiceList('ALL');
     }
-
     function loadCountData() {
         fetch('/api/v1/invoices/count', {
-            method: 'GET',
-            headers: getAuthHeaders()
+            method: 'GET', headers: getAuthHeaders()
         })
             .then(res => res.json())
             .then(data => {
@@ -1152,37 +456,27 @@
                 document.getElementById('successCount').textContent = data.successCount ?? 0;
                 document.getElementById('pendingCount').textContent = data.pendingCount ?? 0;
                 document.getElementById('errorCount').textContent = data.errorCount ?? 0;
-            })
-            .catch(err => {
-                console.error('Count load error:', err);
-            });
+            }).catch(err => {});
     }
-
-    // 검색 필터 적용
     function applySearch() {
         const query = document.getElementById('searchInput').value.trim().toLowerCase();
         searchQuery = query;
-
         if (!query) {
             isSearching = false;
             renderInvoiceTable(allInvoicesData);
             toggleInfiniteScrollElements();
             return;
         }
-
         isSearching = true;
         const filtered = allInvoicesData.filter(inv => {
-            return (inv.productName || '').toLowerCase().includes(query) ||
-                (inv.number || '').toLowerCase().includes(query) ||
-                (inv.receiverName || '').toLowerCase().includes(query);
+            return (inv.productName||'').toLowerCase().includes(query) ||
+                (inv.number||'').toLowerCase().includes(query) ||
+                (inv.receiverName||'').toLowerCase().includes(query);
         });
         renderInvoiceTable(filtered);
         hideInfiniteScrollElements();
     }
-
-    // 송장 목록 로드 (새로운 필터/상태 선택 시)
     function loadInvoiceList(status) {
-        // 초기화
         currentPage = 1;
         currentStatus = status;
         allInvoicesData = [];
@@ -1190,165 +484,113 @@
         isLoading = false;
         isSearching = false;
         searchQuery = '';
-
-        // 검색창 초기화
         document.getElementById('searchInput').value = '';
-
-        const loading = document.getElementById('tableLoading');
-        const body = document.getElementById('invoiceTableBody');
-        const empty = document.getElementById('emptyState');
-
-        loading.style.display = 'flex';
-        body.innerHTML = '';
-        empty.style.display = 'none';
+        document.getElementById('tableLoading').style.display = 'flex';
+        document.getElementById('invoiceTableBody').innerHTML = '';
+        document.getElementById('emptyState').style.display = 'none';
         hideInfiniteScrollElements();
-
         fetchInvoiceData(status, currentPage, false);
     }
-
-    // 더 많은 송장 로드 (무한스크롤)
     function loadMoreInvoices() {
         if (isLoading || !hasMoreData || isSearching) return;
-
         currentPage++;
         fetchInvoiceData(currentStatus, currentPage, true);
     }
-
-    // API에서 송장 데이터 가져오기
     function fetchInvoiceData(status, page, isLoadMore = false) {
         if (isLoading) return;
-
         isLoading = true;
-
         if (isLoadMore) {
             document.getElementById('infiniteLoading').style.display = 'flex';
         }
-
         fetch(`/api/v1/invoices?status=${encodeURIComponent(status)}&pageNumber=${page}&size=20`, {
-            method: 'GET',
-            headers: getAuthHeaders()
+            method: 'GET', headers: getAuthHeaders()
         })
             .then(res => res.json())
             .then(data => {
-                const invoices = Array.isArray(data) ? data : (data.content || data.items || []);
-
+                const invoices = Array.isArray(data) ? data : (data.content||data.items||[]);
                 if (invoices.length === 0) {
                     hasMoreData = false;
                 } else {
                     allInvoicesData = isLoadMore ? [...allInvoicesData, ...invoices] : invoices;
                 }
-
-                if (isLoadMore) {
-                    document.getElementById('infiniteLoading').style.display = 'none';
-                } else {
-                    document.getElementById('tableLoading').style.display = 'none';
-                }
-
+                if (isLoadMore) document.getElementById('infiniteLoading').style.display = 'none';
+                else document.getElementById('tableLoading').style.display = 'none';
                 renderInvoiceTable(allInvoicesData);
                 toggleInfiniteScrollElements();
-
                 isLoading = false;
             })
             .catch(err => {
-                console.error('Invoice list error:', err);
                 isLoading = false;
-
-                if (isLoadMore) {
-                    document.getElementById('infiniteLoading').style.display = 'none';
-                } else {
+                if (isLoadMore) document.getElementById('infiniteLoading').style.display = 'none';
+                else {
                     document.getElementById('tableLoading').style.display = 'none';
-                    const body = document.getElementById('invoiceTableBody');
-                    body.innerHTML = '<div class="empty">데이터를 불러오는데 실패했어요.</div>';
+                    document.getElementById('invoiceTableBody').innerHTML = '<div class="empty">데이터를 불러오는데 실패했어요.</div>';
                 }
             });
     }
-
-    // 무한스크롤 관련 UI 요소 표시/숨김
     function toggleInfiniteScrollElements() {
         const infiniteLoading = document.getElementById('infiniteLoading');
         const noMoreData = document.getElementById('noMoreData');
-
         if (!hasMoreData && allInvoicesData.length > 0) {
             noMoreData.style.display = 'block';
         } else {
             noMoreData.style.display = 'none';
         }
-
         infiniteLoading.style.display = 'none';
     }
-
     function hideInfiniteScrollElements() {
         document.getElementById('infiniteLoading').style.display = 'none';
         document.getElementById('noMoreData').style.display = 'none';
     }
-
     function renderInvoiceTable(invoices) {
         const container = document.getElementById('invoiceTableBody');
         const empty = document.getElementById('emptyState');
-
         if (!invoices || invoices.length === 0) {
             container.innerHTML = '';
             empty.style.display = 'block';
             hideInfiniteScrollElements();
             return;
         }
-
         empty.style.display = 'none';
-
         const rows = invoices.map(inv => {
             const createdAt = inv.createdAt ? new Date(inv.createdAt).toLocaleString('ko-KR') : '-';
             const statusLabel = getStatusLabel(inv.status);
-
             return `
                 <div class="row" role="button" tabindex="0" onclick="openInvoiceDetail(${inv.id})"
                      onkeydown="if(event.key==='Enter'){openInvoiceDetail(${inv.id})}">
                     <div>
-                        <div class="cell-title">${escapeHtml(inv.productName || '-')}</div>
-                        <div class="cell-sub">${escapeHtml(inv.courierName || '')} ${inv.number ? '· ' + escapeHtml(inv.number) : ''}</div>
+                        <div class="cell-title">${escapeHtml(inv.productName||'-')}</div>
+                        <div class="cell-sub">${escapeHtml(inv.courierName||'')} ${inv.number?'· '+escapeHtml(inv.number):''}</div>
                     </div>
                     <div>${statusLabel}</div>
-                    <div class="cell-muted">${escapeHtml(inv.number || '-')}</div>
-                    <div class="cell-muted">${escapeHtml(inv.receiverName || '-')}</div>
+                    <div class="cell-muted">${escapeHtml(inv.number||'-')}</div>
+                    <div class="cell-muted">${escapeHtml(inv.receiverName||'-')}</div>
                     <div class="cell-muted">${createdAt}</div>
                 </div>
             `;
         }).join('');
-
         container.innerHTML = rows;
     }
-
-    // 송장 상세 보기
     function openInvoiceDetail(id) {
         currentInvoiceId = id;
         const modal = document.getElementById('detailModal');
         modal.classList.add('show');
         modal.setAttribute('aria-hidden', 'false');
-
-        document.getElementById('detailStatusArea').innerHTML = `
-            <div style="color: var(--text-secondary);">로딩 중…</div>
-        `;
-
+        document.getElementById('detailStatusArea').innerHTML =
+            `<div style="color: var(--text-secondary);">로딩 중…</div>`;
         fetch(`/api/v1/invoices/${id}`, {
-            method: 'GET',
-            headers: getAuthHeaders()
+            method: 'GET', headers: getAuthHeaders()
         })
             .then(res => res.json())
-            .then(data => {
-                renderDetailModal(data);
-            })
+            .then(data => { renderDetailModal(data); })
             .catch(err => {
-                console.error('Detail error:', err);
-                document.getElementById('detailStatusArea').innerHTML = `
-                <div style="color: var(--text-secondary);">상세 정보를 불러오지 못했어요.</div>
-            `;
+                document.getElementById('detailStatusArea').innerHTML =
+                    `<div style="color: var(--text-secondary);">상세 정보를 불러오지 못했어요.</div>`;
             });
     }
-
     function renderDetailModal(invoice) {
-        // 상태 표시 - 큰 아이콘과 함께
         const statusText = getStatusText(invoice.status);
         const statusClass = invoice.status?.toLowerCase() || 'pending';
-
         let iconSvg = '';
         if (invoice.status === 'SUCCESS') {
             iconSvg = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none">
@@ -1366,50 +608,33 @@
                 <line x1="12" y1="16" x2="12.01" y2="16" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--status-error-color')}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`;
         }
-
         document.getElementById('detailStatusArea').innerHTML = `
-            <div class="detail-status-icon ${statusClass}">
-                ${iconSvg}
-            </div>
-            <div class="detail-status-content">
-                <div class="detail-status-text ${statusClass}">${escapeHtml(statusText)}</div>
-            </div>
+            <div class="detail-status-icon ${statusClass}">${iconSvg}</div>
+            <div class="detail-status-content"><div class="detail-status-text ${statusClass}">${escapeHtml(statusText)}</div></div>
         `;
-
-        // 상세 정보 (ID 제외)
         const props = [
-            { label: '상태', value: statusText },
-            { label: '택배회사', value: invoice.courierName },
-            { label: '송장번호', value: invoice.number },
-            { label: '상품명', value: invoice.productName },
-            { label: '보내는 주소', value: invoice.sendAddress },
-            { label: '받는 주소', value: invoice.receiveAddress },
-            { label: '받는 사람', value: invoice.receiverName },
-            { label: '스캔 일시', value: invoice.scannedAt ? new Date(invoice.scannedAt).toLocaleString('ko-KR') : '-' },
-            { label: '등록일', value: invoice.createdAt ? new Date(invoice.createdAt).toLocaleString('ko-KR') : '-' },
-            { label: '수정일', value: invoice.updatedAt ? new Date(invoice.updatedAt).toLocaleString('ko-KR') : '-' }
+            {label:'상태', value: statusText},
+            {label:'택배회사', value: invoice.courierName},
+            {label:'송장번호', value: invoice.number},
+            {label:'상품명', value: invoice.productName},
+            {label:'보내는 주소', value: invoice.sendAddress},
+            {label:'받는 주소', value: invoice.receiveAddress},
+            {label:'받는 사람', value: invoice.receiverName},
+            {label:'스캔 일시', value: invoice.scannedAt?new Date(invoice.scannedAt).toLocaleString('ko-KR'):'-'},
+            {label:'등록일', value: invoice.createdAt?new Date(invoice.createdAt).toLocaleString('ko-KR'):'-'},
+            {label:'수정일', value: invoice.updatedAt?new Date(invoice.updatedAt).toLocaleString('ko-KR'):'-'}
         ];
-
-        const detailBody = document.getElementById('detailBody');
-        detailBody.innerHTML = props.map(prop => `
-            <div class="detail-prop">
-                <div class="detail-prop-label">${escapeHtml(prop.label)}</div>
-                <div class="detail-prop-value">${escapeHtml(prop.value ?? '-')}</div>
-            </div>
-        `).join('');
+        document.getElementById('detailBody').innerHTML = props.map(prop=>
+            `<div class="detail-prop"><div class="detail-prop-label">${escapeHtml(prop.label)}</div><div class="detail-prop-value">${escapeHtml(prop.value??'-')}</div></div>`
+        ).join('');
     }
-
-    // 수정 모달 열기
     function openEditModal() {
         if (!currentInvoiceId) return;
-
         fetch(`/api/v1/invoices/${currentInvoiceId}`, {
-            method: 'GET',
-            headers: getAuthHeaders()
+            method: 'GET', headers: getAuthHeaders()
         })
             .then(res => res.json())
             .then(data => {
-                // 폼에 데이터 채우기
                 document.getElementById('invoiceId').value = data.id;
                 document.getElementById('courierName').value = data.courierName || '';
                 document.getElementById('number').value = data.number || '';
@@ -1417,31 +642,19 @@
                 document.getElementById('sendAddress').value = data.sendAddress || '';
                 document.getElementById('receiveAddress').value = data.receiveAddress || '';
                 document.getElementById('receiverName').value = data.receiverName || '';
-
-                // 모달 제목 변경
                 document.getElementById('modalTitle').textContent = '송장 수정';
                 document.getElementById('submitBtn').textContent = '수정';
-
-                // 상세 모달 닫고 수정 모달 열기
                 closeModal('detailModal');
                 openModal('invoiceModal');
             })
-            .catch(err => {
-                console.error('Edit modal error:', err);
-                alert('수정할 데이터를 불러오는데 실패했어요..');
-            });
+            .catch(err => { alert('수정할 데이터를 불러오는데 실패했어요..'); });
     }
-
-    // 송장 삭제
     function deleteInvoice() {
         if (!currentInvoiceId) return;
-
         if (!confirm('정말로 이 송장을 삭제하시겠어요?')) return;
-
         fetch('/api/v1/invoices', {
-            method: 'DELETE',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ id: currentInvoiceId })
+            method: 'DELETE', headers: getAuthHeaders(),
+            body: JSON.stringify({id: currentInvoiceId})
         })
             .then(res => {
                 if (res.ok) {
@@ -1450,47 +663,31 @@
                     loadDashboardData();
                 } else {
                     res.text().then(text => {
-                        alert('삭제에 실패했어요: ' + (text || ''));
+                        alert('삭제에 실패했어요: ' + (text||''));
                     });
                 }
-            })
-            .catch(err => {
-                console.error('Delete error:', err);
-                alert('삭제 중 오류가 발생했어요.');
-            });
+            }).catch(err => { alert('삭제 중 오류가 발생했어요.'); });
     }
-
-    // 송장 추가/수정 폼 처리
     document.getElementById('invoiceForm').addEventListener('submit', function(e) {
         e.preventDefault();
-
         const form = e.currentTarget;
         const formData = new FormData(form);
         const isEdit = !!document.getElementById('invoiceId').value;
-
         const data = {
-            courierName: String(formData.get('courierName') || '').trim(),
-            number: String(formData.get('number') || '').trim(),
-            productName: String(formData.get('productName') || '').trim(),
-            sendAddress: String(formData.get('sendAddress') || '').trim(),
-            receiveAddress: String(formData.get('receiveAddress') || '').trim(),
-            receiverName: String(formData.get('receiverName') || '').trim()
+            courierName: String(formData.get('courierName')||'').trim(),
+            number: String(formData.get('number')||'').trim(),
+            productName: String(formData.get('productName')||'').trim(),
+            sendAddress: String(formData.get('sendAddress')||'').trim(),
+            receiveAddress: String(formData.get('receiveAddress')||'').trim(),
+            receiverName: String(formData.get('receiverName')||'').trim()
         };
-
-        if (isEdit) {
-            data.id = parseInt(document.getElementById('invoiceId').value);
-        }
-
-        // 버튼 비활성화
+        if (isEdit) data.id = parseInt(document.getElementById('invoiceId').value);
         const submitBtn = document.getElementById('submitBtn');
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = '처리중...';
-
         fetch('/api/v1/invoices', {
-            method: 'PUT',
-            headers: getAuthHeaders(),
-            body: JSON.stringify(data)
+            method: 'PUT', headers: getAuthHeaders(), body: JSON.stringify(data)
         })
             .then(res => {
                 if (res.ok) {
@@ -1501,12 +698,11 @@
                 } else {
                     res.text().then(text => {
                         const action = isEdit ? '수정' : '추가';
-                        alert(`${action}에 실패했어요: ${text || ''}`);
+                        alert(`${action}에 실패했어요: ${text||''}`);
                     });
                 }
             })
             .catch(err => {
-                console.error('Form submit error:', err);
                 const action = isEdit ? '수정' : '추가';
                 alert(`${action} 중 오류가 발생했어요.`);
             })
@@ -1515,37 +711,19 @@
                 submitBtn.textContent = originalText;
             });
     });
-
-    // 엑셀 업로드 처리
     document.getElementById('excelForm').addEventListener('submit', function(e) {
         e.preventDefault();
-
         const platformType = document.getElementById('platformType').value;
         const fileInput = document.getElementById('excelFile');
-
-        if (!platformType) {
-            alert('쇼핑몰을 선택해주세요.');
-            return;
-        }
-
-        if (!fileInput.files || !fileInput.files[0]) {
-            alert('파일을 선택해주세요.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
-
-        // 버튼 비활성화
+        if (!platformType) { alert('쇼핑몰을 선택해주세요.'); return; }
+        if (!fileInput.files || !fileInput.files[0]) { alert('파일을 선택해주세요.'); return; }
+        const formData = new FormData(); formData.append('file', fileInput.files[0]);
         const uploadBtn = document.getElementById('excelUploadBtn');
         const originalText = uploadBtn.textContent;
         uploadBtn.disabled = true;
         uploadBtn.textContent = '업로드 중...';
-
         fetch(`/api/v1/invoices/excel/${encodeURIComponent(platformType)}`, {
-            method: 'POST',
-            headers: { 'User-Id': localStorage.getItem('userId') },
-            body: formData
+            method: 'POST', headers: {'User-Id': localStorage.getItem('userId')}, body: formData
         })
             .then(res => {
                 if (res.ok) {
@@ -1554,116 +732,100 @@
                     loadDashboardData();
                 } else {
                     res.text().then(text => {
-                        alert('업로드 실패: ' + (text || ''));
+                        alert('업로드 실패: ' + (text||''));
                     });
                 }
             })
-            .catch(err => {
-                console.error('Excel upload error:', err);
-                alert('업로드 중 오류가 발생했어요.');
-            })
+            .catch(err => { alert('업로드 중 오류가 발생했어요.'); })
             .finally(() => {
                 uploadBtn.disabled = false;
                 uploadBtn.textContent = originalText;
             });
     });
-
-    // 엑셀 다운로드 처리
-    function downloadExcel() {
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-            alert('로그인이 필요해요.');
+    function downloadExcelFront() {
+        let dataToExport = isSearching && searchQuery
+            ? allInvoicesData.filter(inv =>
+                (inv.productName||'').toLowerCase().includes(searchQuery) ||
+                (inv.number||'').toLowerCase().includes(searchQuery) ||
+                (inv.receiverName||'').toLowerCase().includes(searchQuery)
+            )
+            : allInvoicesData;
+        if (!dataToExport || dataToExport.length === 0) {
+            alert('다운로드할 송장 데이터가 없습니다.');
             return;
         }
-
-        // 다운로드 링크 생성
-        const link = document.createElement('a');
-        link.href = `/api/v1/invoices/excel/download?userId=${encodeURIComponent(userId)}`;
-        link.download = `송장목록_${new Date().toISOString().slice(0, 10)}.xlsx`;
-
-        // 임시로 DOM에 추가하고 클릭하여 다운로드 실행
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const headers = [
+            "상품명", "상태", "송장번호", "택배회사", "보내는 주소", "받는 주소", "수신자", "스캔 일시", "등록일", "수정일"
+        ];
+        const rows = dataToExport.map(inv => [
+            inv.productName||'',
+            getStatusText(inv.status),
+            inv.number||'',
+            inv.courierName||'',
+            inv.sendAddress||'',
+            inv.receiveAddress||'',
+            inv.receiverName||'',
+            inv.scannedAt?new Date(inv.scannedAt).toLocaleString('ko-KR'):'',
+            inv.createdAt?new Date(inv.createdAt).toLocaleString('ko-KR'):'',
+            inv.updatedAt?new Date(inv.updatedAt).toLocaleString('ko-KR'):''
+        ]);
+        const excelSheet = XLSX.utils.aoa_to_sheet([headers,...rows]);
+        const excelBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(excelBook, excelSheet, "송장내역");
+        const now = new Date();
+        const yyyy = now.getFullYear(), mm = String(now.getMonth()+1).padStart(2,'0'), dd = String(now.getDate()).padStart(2,'0');
+        const filename = `송장내역_${yyyy}_${mm}_${dd}.xlsx`;
+        XLSX.writeFile(excelBook, filename);
     }
-
-    // 파일 선택 처리
     function handleFileSelect(event) {
         const file = event.target.files[0];
         if (file) {
             document.getElementById('uploadText').innerHTML = `
                 <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 8px; vertical-align: middle;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right:8px; vertical-align:middle;">
                         <path d="M20 6L9 17l-5-5" stroke="var(--status-success-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     ${escapeHtml(file.name)}
                 </div>
-                <div style="font-size: 14px; color: var(--text-secondary);">
-                    파일이 선택되었어요
-                </div>
+                <div style="font-size: 14px; color: var(--text-secondary);">파일이 선택되었어요</div>
             `;
         }
     }
-
-    // 파일 드래그 앤 드롭 처리
     (function setupDragAndDrop() {
         const area = document.querySelector('.file-upload-area');
         if (!area) return;
-
-        area.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            area.classList.add('dragging');
-        });
-
-        area.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            area.classList.remove('dragging');
-        });
-
+        area.addEventListener('dragover', (e) => {e.preventDefault(); area.classList.add('dragging');});
+        area.addEventListener('dragleave', (e) => {e.preventDefault(); area.classList.remove('dragging');});
         area.addEventListener('drop', (e) => {
-            e.preventDefault();
-            area.classList.remove('dragging');
-
+            e.preventDefault(); area.classList.remove('dragging');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 document.getElementById('excelFile').files = files;
-                handleFileSelect({ target: { files } });
+                handleFileSelect({target:{files}});
             }
         });
     })();
-
-    // 모달 관련 함수들
     function openModal(modalId) {
         const modal = document.getElementById(modalId);
         if (!modal) return;
-        modal.classList.add('show');
-        modal.setAttribute('aria-hidden', 'false');
-
-        // 첫 번째 입력 필드에 포커스
+        modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false');
         const firstInput = modal.querySelector('input:not([type="hidden"]), select, textarea');
-        if (firstInput) {
-            setTimeout(() => firstInput.focus(), 100);
-        }
+        if (firstInput) { setTimeout(() => firstInput.focus(), 100); }
     }
-
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
         if (!modal) return;
-        modal.classList.remove('show');
-        modal.setAttribute('aria-hidden', 'true');
-
-        // 폼 리셋 (추가 모달인 경우)
-        if (modalId === 'invoiceModal') {
+        modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true');
+        if (modalId==='invoiceModal') {
             document.getElementById('invoiceForm').reset();
             document.getElementById('modalTitle').textContent = '송장 추가';
             document.getElementById('submitBtn').textContent = '저장';
         }
-
-        if (modalId === 'excelModal') {
+        if (modalId==='excelModal') {
             document.getElementById('excelForm').reset();
             document.getElementById('uploadText').innerHTML = `
                 <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 8px; vertical-align: middle;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right:8px; vertical-align:middle;">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -1674,8 +836,6 @@
             `;
         }
     }
-
-    // 추가 모달 열기
     function openAddModal() {
         document.getElementById('invoiceForm').reset();
         document.getElementById('invoiceId').value = '';
@@ -1683,14 +843,10 @@
         document.getElementById('submitBtn').textContent = '저장';
         openModal('invoiceModal');
     }
-
-    // 엑셀 모달 열기
     function openExcelModal() {
         document.getElementById('excelForm').reset();
         openModal('excelModal');
     }
-
-    // 로그아웃
     function logout() {
         if (confirm('로그아웃을 하시겠어요?')) {
             localStorage.removeItem('userId');
@@ -1698,15 +854,11 @@
             window.location.href = '/page/v1/login';
         }
     }
-
-    // 키보드 단축키 처리
     window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            ['detailModal', 'invoiceModal', 'excelModal'].forEach(id => {
+        if (e.key==='Escape') {
+            ['detailModal','invoiceModal','excelModal'].forEach(id=>{
                 const modal = document.getElementById(id);
-                if (modal && modal.classList.contains('show')) {
-                    closeModal(id);
-                }
+                if (modal && modal.classList.contains('show')) closeModal(id);
             });
         }
     });
