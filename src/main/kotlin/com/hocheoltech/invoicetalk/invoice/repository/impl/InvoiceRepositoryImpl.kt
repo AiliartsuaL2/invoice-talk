@@ -85,9 +85,9 @@ class InvoiceRepositoryImpl(
 
     private fun getOrder(isProcessed: Boolean): OrderSpecifier<LocalDateTime> {
         return if (isProcessed) {
-            invoice.createdAt.desc()
-        } else {
             invoice.scannedAt.desc()
+        } else {
+            invoice.createdAt.desc()
         }
     }
 }
