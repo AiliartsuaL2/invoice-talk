@@ -71,18 +71,22 @@ class GetInvoice {
 
         companion object {
             @JvmStatic
-            fun from(invoice: Invoice): ResponseStatus {
-                return when (invoice.status) {
-                    InvoiceStatus.PENDING -> {
-                        if (invoice.histories.isEmpty()) {
-                            PENDING
-                        } else {
-                            CANCELED
-                        }
-                    }
-                    InvoiceStatus.SUCCESS -> SUCCESS
-                    InvoiceStatus.ERROR -> ERROR
+            fun from(invoice: Invoice, statusType: Request.StatusType): ResponseStatus {
+                // PROCESSED 로 요청하고, 대기중인데 히스토리가 있는 경우 취소된 건
+                return if (
+                    statusType == Request.StatusType.PROCESSED &&
+                    invoice.status == InvoiceStatus.PENDING &&
+                    invoice.histories.isNotEmpty()
+                ) {
+                    CANCELED
+                } else {
+                    ResponseStatus.valueOf(invoice.status.name)
                 }
+            }
+
+            @JvmStatic
+            fun from(invoice: Invoice): ResponseStatus {
+                return ResponseStatus.valueOf(invoice.status.name)
             }
         }
     }

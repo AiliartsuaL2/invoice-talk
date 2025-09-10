@@ -76,7 +76,7 @@ class InvoiceService(
             userId,
             request.toInvoiceStatus(),
             request.toPageable(),
-        ).map { invoiceMapper.toResponse(it) }
+        ).map { invoiceMapper.toResponse(it, request.status!!) }
     }
 
     /**
