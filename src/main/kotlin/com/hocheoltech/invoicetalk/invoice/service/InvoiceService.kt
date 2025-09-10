@@ -1,14 +1,20 @@
 package com.hocheoltech.invoicetalk.invoice.service
 
+import com.hocheoltech.invoicetalk.global.enums.ExcelUploadType
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
 import com.hocheoltech.invoicetalk.invoice.dto.*
+import com.hocheoltech.invoicetalk.invoice.excel.Cafe24ExcelUploader
+import com.hocheoltech.invoicetalk.invoice.excel.CoupangExcelUploader
+import com.hocheoltech.invoicetalk.invoice.excel.NaverExcelUploader
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceMapper
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceStatusHistoryMapper
 import com.hocheoltech.invoicetalk.invoice.repository.InvoiceRepository
 import com.hocheoltech.invoicetalk.user.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -19,6 +25,9 @@ class InvoiceService(
     private val userRepository: UserRepository,
     private val invoiceMapper: InvoiceMapper,
     private val invoiceStatusHistoryMapper: InvoiceStatusHistoryMapper,
+    private val coupangExcelUploader: CoupangExcelUploader,
+    private val naverExcelUploader: NaverExcelUploader,
+    private val cafe24ExcelUploader: Cafe24ExcelUploader,
 ) {
     /**
      * 송장 단건 등록
@@ -63,9 +72,21 @@ class InvoiceService(
     @Transactional
     fun createInvoices(
         userId: Long,
-        request: List<PutInvoice.Request>
+        type: ExcelUploadType,
+        excelFile: MultipartFile
     ) {
-        // TODO 엑셀 업로드로 구현
+        val user = userRepository.findByIdOrNull(userId)
+            ?: throw IllegalArgumentException(ErrorCode.NOT_EXISTS_USER.message)
+
+        val uploadedData = when (type) {
+            ExcelUploadType.COUPANG -> coupangExcelUploader.upload(excelFile)
+            ExcelUploadType.NAVER -> naverExcelUploader.upload(excelFile)
+            ExcelUploadType.CAFE24 -> cafe24ExcelUploader.upload(excelFile)
+        }
+        val invoices = uploadedData.map {
+            invoiceMapper.toEntity(it, user)
+        }
+        invoiceRepository.saveAll(invoices)
     }
 
     fun getInvoices(

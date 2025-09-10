@@ -1,10 +1,12 @@
 package com.hocheoltech.invoicetalk.invoice.controller
 
+import com.hocheoltech.invoicetalk.global.enums.ExcelUploadType
 import com.hocheoltech.invoicetalk.invoice.dto.*
 import com.hocheoltech.invoicetalk.invoice.service.InvoiceService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class InvoiceController(
@@ -33,14 +35,14 @@ class InvoiceController(
     }
 
     // 엑셀 등록
-    @PostMapping("/api/v1/invoices/excel")
+    @PostMapping("/api/v1/invoices/excel/{type}")
     fun createInvoice(
         @RequestHeader(value = "user-id")
         userId: Long,
-        @Valid @RequestBody
-        request: List<PutInvoice.Request>,
+        @PathVariable type: ExcelUploadType,
+        @RequestPart file: MultipartFile,
     ): ResponseEntity<Unit> {
-        return ResponseEntity.ok(invoiceService.createInvoices(userId, request))
+        return ResponseEntity.ok(invoiceService.createInvoices(userId, type, file))
     }
 
     // 송장 내역 리스트 조회

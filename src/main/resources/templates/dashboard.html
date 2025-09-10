@@ -278,6 +278,16 @@
             background: #ffcdd2;
         }
 
+        .btn-download {
+            background: var(--status-success-bg);
+            color: var(--status-success-color);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .btn-download:hover:not(:disabled) {
+            background: #c8e6c9;
+        }
+
         /* Status Labels */
         .status-label {
             display: inline-flex;
@@ -656,7 +666,7 @@
             color: var(--text-primary);
         }
 
-        .form-input {
+        .form-input, .form-select {
             padding: 12px 16px;
             border-radius: 10px;
             border: 1px solid var(--border);
@@ -665,13 +675,23 @@
             background: var(--card);
         }
 
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--accent-blue);
         }
 
         .form-input::placeholder {
             color: var(--text-tertiary);
+        }
+
+        .form-select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7684' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+            appearance: none;
         }
 
         /* File Upload */
@@ -802,6 +822,14 @@
             </div>
 
             <div class="actions">
+                <button class="btn btn-download" onclick="downloadExcel()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    엑셀 다운로드
+                </button>
                 <button class="btn btn-secondary" onclick="openExcelModal()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -941,7 +969,7 @@
 
 <!-- 엑셀 업로드 모달 -->
 <div id="excelModal" class="modal" aria-hidden="true">
-    <div class="modal-panel" style="max-width: 480px;">
+    <div class="modal-panel" style="max-width: 520px;">
         <div class="modal-header">
             <div class="modal-title">엑셀 업로드</div>
             <button class="modal-close" onclick="closeModal('excelModal')">
@@ -954,10 +982,28 @@
         <div class="modal-body">
             <form id="excelForm" enctype="multipart/form-data">
                 <div class="form-row">
+                    <label class="form-label">쇼핑몰 선택</label>
+                    <select id="platformType" name="platformType" class="form-select" required>
+                        <option value="">쇼핑몰을 선택해주세요</option>
+                        <option value="COUPANG">쿠팡</option>
+                        <option value="NAVER">스마트 스토어</option>
+                        <option value="CAFE24">카페24</option>
+                        <option value="AUCTION_GMARKET">옥션, 지마켓</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label">파일 선택</label>
                     <div class="file-upload-area" onclick="document.getElementById('excelFile').click()">
                         <input type="file" id="excelFile" name="file" accept=".xlsx,.xls" style="display:none" onchange="handleFileSelect(event)" />
                         <div id="uploadText">
-                            <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">엑셀 파일 업로드</div>
+                            <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 8px; vertical-align: middle;">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                엑셀 파일 업로드
+                            </div>
                             <div style="font-size: 14px; color: var(--text-secondary);">파일을 선택하거나 여기로 드래그하세요</div>
                             <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">.xlsx, .xls 파일만 지원</div>
                         </div>
@@ -968,7 +1014,7 @@
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" onclick="closeModal('excelModal')">취소</button>
-            <button type="submit" form="excelForm" class="btn btn-primary">업로드</button>
+            <button type="submit" form="excelForm" class="btn btn-primary" id="excelUploadBtn">업로드</button>
         </div>
     </div>
 </div>
@@ -1336,7 +1382,14 @@
     document.getElementById('excelForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
+        const platformType = document.getElementById('platformType').value;
         const fileInput = document.getElementById('excelFile');
+
+        if (!platformType) {
+            alert('쇼핑몰을 선택해주세요.');
+            return;
+        }
+
         if (!fileInput.files || !fileInput.files[0]) {
             alert('파일을 선택해주세요.');
             return;
@@ -1345,7 +1398,13 @@
         const formData = new FormData();
         formData.append('file', fileInput.files[0]);
 
-        fetch('/api/v1/invoices/excel', {
+        // 버튼 비활성화
+        const uploadBtn = document.getElementById('excelUploadBtn');
+        const originalText = uploadBtn.textContent;
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = '업로드 중...';
+
+        fetch(`/api/v1/invoices/excel/${encodeURIComponent(platformType)}`, {
             method: 'POST',
             headers: { 'User-Id': localStorage.getItem('userId') },
             body: formData
@@ -1364,8 +1423,31 @@
             .catch(err => {
                 console.error('Excel upload error:', err);
                 alert('업로드 중 오류가 발생했어요.');
+            })
+            .finally(() => {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = originalText;
             });
     });
+
+    // 엑셀 다운로드 처리
+    function downloadExcel() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            alert('로그인이 필요해요.');
+            return;
+        }
+
+        // 다운로드 링크 생성
+        const link = document.createElement('a');
+        link.href = `/api/v1/invoices/excel/download?userId=${encodeURIComponent(userId)}`;
+        link.download = `송장목록_${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+        // 임시로 DOM에 추가하고 클릭하여 다운로드 실행
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
     // 파일 선택 처리
     function handleFileSelect(event) {
@@ -1373,6 +1455,9 @@
         if (file) {
             document.getElementById('uploadText').innerHTML = `
                 <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 8px; vertical-align: middle;">
+                        <path d="M20 6L9 17l-5-5" stroke="var(--status-success-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     ${escapeHtml(file.name)}
                 </div>
                 <div style="font-size: 14px; color: var(--text-secondary);">
@@ -1439,7 +1524,13 @@
         if (modalId === 'excelModal') {
             document.getElementById('excelForm').reset();
             document.getElementById('uploadText').innerHTML = `
-                <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">엑셀 파일 업로드</div>
+                <div style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 8px; vertical-align: middle;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    엑셀 파일 업로드
+                </div>
                 <div style="font-size: 14px; color: var(--text-secondary);">파일을 선택하거나 여기로 드래그하세요</div>
                 <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">.xlsx, .xls 파일만 지원</div>
             `;

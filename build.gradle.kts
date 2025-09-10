@@ -63,6 +63,9 @@ dependencies {
     kapt("org.mapstruct:mapstruct-processor:1.6.3")
     kaptTest("org.mapstruct:mapstruct-processor:1.6.3")
 
+    // excel
+    implementation("org.apache.poi:poi-ooxml:3.9")
+
 
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
