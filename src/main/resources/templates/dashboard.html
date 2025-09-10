@@ -414,7 +414,7 @@
 
         .table-body {
             max-height: 60vh;
-            overflow: auto;
+            overflow-y: auto;
         }
 
         .row {
@@ -483,6 +483,25 @@
             text-align: center;
             color: var(--text-tertiary);
             font-size: 15px;
+        }
+
+        /* 무한스크롤 로딩 표시 */
+        .infinite-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .no-more-data {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+            border-top: 1px solid var(--border-light);
         }
 
         /* Modals */
@@ -878,6 +897,18 @@
         <div class="table-body" id="invoiceTableBody">
             <!-- rows injected here -->
         </div>
+
+        <!-- 무한스크롤 로딩 표시 -->
+        <div id="infiniteLoading" class="infinite-loading" style="display:none">
+            <div class="spinner"></div>
+            <div>더 많은 데이터를 불러오는 중…</div>
+        </div>
+
+        <!-- 더 이상 데이터가 없을 때 표시 -->
+        <div id="noMoreData" class="no-more-data" style="display:none">
+            더 이상 불러올 데이터가 없어요
+        </div>
+
         <div id="emptyState" class="empty" style="display:none">등록된 송장이 없어요</div>
     </div>
 </main>
@@ -1023,6 +1054,15 @@
     // 현재 선택된 송장 ID 저장
     let currentInvoiceId = null;
 
+    // 무한스크롤 관련 변수들
+    let currentPage = 1;
+    let currentStatus = 'ALL';
+    let isLoading = false;
+    let hasMoreData = true;
+    let allInvoicesData = []; // 모든 로드된 데이터
+    let isSearching = false;
+    let searchQuery = '';
+
     // 유틸리티 함수
     function getAuthHeaders() {
         const userId = localStorage.getItem('userId');
@@ -1072,8 +1112,28 @@
         if (username) {
             document.getElementById('usernameDisplay').textContent = username + '님';
         }
+
+        // 무한스크롤 이벤트 리스너 등록
+        setupInfiniteScroll();
+
         loadDashboardData();
     });
+
+    // 무한스크롤 설정
+    function setupInfiniteScroll() {
+        const tableBody = document.getElementById('invoiceTableBody');
+
+        tableBody.addEventListener('scroll', () => {
+            const { scrollTop, scrollHeight, clientHeight } = tableBody;
+
+            // 스크롤이 하단에 근접했을 때 (90% 지점)
+            if (scrollTop + clientHeight >= scrollHeight * 0.9) {
+                if (!isLoading && hasMoreData && !isSearching) {
+                    loadMoreInvoices();
+                }
+            }
+        });
+    }
 
     // 대시보드 데이터 로드
     function loadDashboardData() {
@@ -1099,26 +1159,41 @@
     }
 
     // 검색 필터 적용
-    let lastLoadedInvoices = [];
     function applySearch() {
         const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        if (!lastLoadedInvoices || lastLoadedInvoices.length === 0) return;
+        searchQuery = query;
 
         if (!query) {
-            renderInvoiceTable(lastLoadedInvoices);
+            isSearching = false;
+            renderInvoiceTable(allInvoicesData);
+            toggleInfiniteScrollElements();
             return;
         }
 
-        const filtered = lastLoadedInvoices.filter(inv => {
+        isSearching = true;
+        const filtered = allInvoicesData.filter(inv => {
             return (inv.productName || '').toLowerCase().includes(query) ||
                 (inv.number || '').toLowerCase().includes(query) ||
                 (inv.receiverName || '').toLowerCase().includes(query);
         });
         renderInvoiceTable(filtered);
+        hideInfiniteScrollElements();
     }
 
-    // 송장 목록 로드
+    // 송장 목록 로드 (새로운 필터/상태 선택 시)
     function loadInvoiceList(status) {
+        // 초기화
+        currentPage = 1;
+        currentStatus = status;
+        allInvoicesData = [];
+        hasMoreData = true;
+        isLoading = false;
+        isSearching = false;
+        searchQuery = '';
+
+        // 검색창 초기화
+        document.getElementById('searchInput').value = '';
+
         const loading = document.getElementById('tableLoading');
         const body = document.getElementById('invoiceTableBody');
         const empty = document.getElementById('emptyState');
@@ -1126,23 +1201,85 @@
         loading.style.display = 'flex';
         body.innerHTML = '';
         empty.style.display = 'none';
+        hideInfiniteScrollElements();
 
-        fetch(`/api/v1/invoices?status=${encodeURIComponent(status)}&pageNumber=1&size=100`, {
+        fetchInvoiceData(status, currentPage, false);
+    }
+
+    // 더 많은 송장 로드 (무한스크롤)
+    function loadMoreInvoices() {
+        if (isLoading || !hasMoreData || isSearching) return;
+
+        currentPage++;
+        fetchInvoiceData(currentStatus, currentPage, true);
+    }
+
+    // API에서 송장 데이터 가져오기
+    function fetchInvoiceData(status, page, isLoadMore = false) {
+        if (isLoading) return;
+
+        isLoading = true;
+
+        if (isLoadMore) {
+            document.getElementById('infiniteLoading').style.display = 'flex';
+        }
+
+        fetch(`/api/v1/invoices?status=${encodeURIComponent(status)}&pageNumber=${page}&size=20`, {
             method: 'GET',
             headers: getAuthHeaders()
         })
             .then(res => res.json())
             .then(data => {
-                loading.style.display = 'none';
                 const invoices = Array.isArray(data) ? data : (data.content || data.items || []);
-                lastLoadedInvoices = invoices;
-                renderInvoiceTable(invoices);
+
+                if (invoices.length === 0) {
+                    hasMoreData = false;
+                } else {
+                    allInvoicesData = isLoadMore ? [...allInvoicesData, ...invoices] : invoices;
+                }
+
+                if (isLoadMore) {
+                    document.getElementById('infiniteLoading').style.display = 'none';
+                } else {
+                    document.getElementById('tableLoading').style.display = 'none';
+                }
+
+                renderInvoiceTable(allInvoicesData);
+                toggleInfiniteScrollElements();
+
+                isLoading = false;
             })
             .catch(err => {
-                loading.style.display = 'none';
-                body.innerHTML = '<div class="empty">데이터를 불러오는데 실패했어요.</div>';
                 console.error('Invoice list error:', err);
+                isLoading = false;
+
+                if (isLoadMore) {
+                    document.getElementById('infiniteLoading').style.display = 'none';
+                } else {
+                    document.getElementById('tableLoading').style.display = 'none';
+                    const body = document.getElementById('invoiceTableBody');
+                    body.innerHTML = '<div class="empty">데이터를 불러오는데 실패했어요.</div>';
+                }
             });
+    }
+
+    // 무한스크롤 관련 UI 요소 표시/숨김
+    function toggleInfiniteScrollElements() {
+        const infiniteLoading = document.getElementById('infiniteLoading');
+        const noMoreData = document.getElementById('noMoreData');
+
+        if (!hasMoreData && allInvoicesData.length > 0) {
+            noMoreData.style.display = 'block';
+        } else {
+            noMoreData.style.display = 'none';
+        }
+
+        infiniteLoading.style.display = 'none';
+    }
+
+    function hideInfiniteScrollElements() {
+        document.getElementById('infiniteLoading').style.display = 'none';
+        document.getElementById('noMoreData').style.display = 'none';
     }
 
     function renderInvoiceTable(invoices) {
@@ -1152,6 +1289,7 @@
         if (!invoices || invoices.length === 0) {
             container.innerHTML = '';
             empty.style.display = 'block';
+            hideInfiniteScrollElements();
             return;
         }
 
