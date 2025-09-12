@@ -8,7 +8,6 @@ class PutInvoice {
         val id: Long?,
         @field:NotBlank
         val courierName: String?,
-        @field:NotBlank
         val number: String?,
         @field:NotBlank
         val productName: String?,

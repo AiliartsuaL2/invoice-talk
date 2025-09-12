@@ -51,7 +51,7 @@ class GetInvoice {
         val id: Long,
         val status: InvoiceStatus,
         val courierName: String,
-        val number: String,
+        val number: String?,
         val productName: String,
         val sendAddress: String,
         val receiveAddress: String,

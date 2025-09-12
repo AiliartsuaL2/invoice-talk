@@ -1,6 +1,6 @@
 package com.hocheoltech.invoicetalk.global.utils
 
-import com.hocheoltech.invoicetalk.invoice.excel.InvoiceExcelUpload
+import com.hocheoltech.invoicetalk.invoice.excel.InvoiceExcelUploadDto
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.springframework.web.multipart.MultipartFile
 import kotlin.reflect.KClass
@@ -10,9 +10,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createInstance
 
 abstract class AbstractExcelUploader(
-    private val dtoClass: KClass<InvoiceExcelUpload>,
+    private val dtoClass: KClass<InvoiceExcelUploadDto>,
 ) {
-    fun upload(file: MultipartFile): List<InvoiceExcelUpload> {
+    fun upload(file: MultipartFile): List<InvoiceExcelUploadDto> {
         val workbook = WorkbookFactory.create(file.inputStream)
         val sheet = workbook.getSheetAt(0)
         val headerRow = sheet.getRow(getHeaderRow())
@@ -22,7 +22,7 @@ abstract class AbstractExcelUploader(
             headerRow.getCell(it).stringCellValue.trim()
         }
 
-        val results = mutableListOf<InvoiceExcelUpload>()
+        val results = mutableListOf<InvoiceExcelUploadDto>()
 
         for (rowIdx in 1 until sheet.physicalNumberOfRows) {
             val row = sheet.getRow(rowIdx)
@@ -33,9 +33,9 @@ abstract class AbstractExcelUploader(
                 val cellValue = row.getCell(colIndex)?.toString()
                 if (cellValue == excelHeader) continue // 헤더 값 무시
 
-                if (dtoFieldName is KMutableProperty1<InvoiceExcelUpload, *>) {
+                if (dtoFieldName is KMutableProperty1<InvoiceExcelUploadDto, *>) {
                     @Suppress("UNCHECKED_CAST")
-                    val mutableProperty = dtoFieldName as KMutableProperty1<InvoiceExcelUpload, Any?>
+                    val mutableProperty = dtoFieldName as KMutableProperty1<InvoiceExcelUploadDto, Any?>
                     val convertedValue = convertValue(cellValue, dtoFieldName.returnType)
                     mutableProperty.set(dto, convertedValue)
                 }
@@ -51,7 +51,7 @@ abstract class AbstractExcelUploader(
      * 파라미터 등록 함수
      *  엑셀 헤더명, DTO 프로퍼티
      */
-    protected abstract fun getParameters(): Map<String, KProperty1<InvoiceExcelUpload, *>>
+    protected abstract fun getParameters(): Map<String, KProperty1<InvoiceExcelUploadDto, *>>
 
     protected abstract fun getHeaderRow(): Int
 

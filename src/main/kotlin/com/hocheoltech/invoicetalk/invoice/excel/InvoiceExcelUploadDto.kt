@@ -1,6 +1,6 @@
 package com.hocheoltech.invoicetalk.invoice.excel
 
-open class InvoiceExcelUpload {
+open class InvoiceExcelUploadDto {
     // 택배사명
     var courierName: String? = null
 
@@ -19,7 +19,6 @@ open class InvoiceExcelUpload {
     fun isValid(): Boolean {
         if (
             this.courierName != null &&
-            this.number != null &&
             this.productName != null &&
             this.receiveAddress != null &&
             this.receiverName != null

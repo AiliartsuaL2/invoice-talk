@@ -5,14 +5,13 @@ import org.springframework.stereotype.Component
 import kotlin.reflect.KProperty1
 
 @Component
-class NaverExcelUploader: AbstractExcelUploader(InvoiceExcelUpload::class) {
-    override fun getParameters(): Map<String, KProperty1<InvoiceExcelUpload, *>> {
+class NaverExcelUploader: AbstractExcelUploader(InvoiceExcelUploadDto::class) {
+    override fun getParameters(): Map<String, KProperty1<InvoiceExcelUploadDto, *>> {
         return mapOf(
-            "택배사" to InvoiceExcelUpload::courierName,
-            "상품번호" to InvoiceExcelUpload::number,
-            "상품명" to InvoiceExcelUpload::productName,
-            "통합배송지" to InvoiceExcelUpload::receiveAddress,
-            "수취인명" to InvoiceExcelUpload::receiverName,
+            "택배사" to InvoiceExcelUploadDto::courierName,
+            "상품명" to InvoiceExcelUploadDto::productName,
+            "통합배송지" to InvoiceExcelUploadDto::receiveAddress,
+            "수취인명" to InvoiceExcelUploadDto::receiverName,
         )
     }
 

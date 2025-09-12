@@ -1,5 +1,6 @@
 package com.hocheoltech.invoicetalk.invoice.repository
 
+import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.invoice.entity.Invoice
 import com.hocheoltech.invoicetalk.invoice.repository.custom.CustomInvoiceRepository
 import org.springframework.data.jpa.repository.JpaRepository
@@ -13,4 +14,10 @@ interface InvoiceRepository: JpaRepository<Invoice, Long>, CustomInvoiceReposito
         startAt: LocalDateTime,
         endAt: LocalDateTime,
     ): Long
+
+
+    fun findByUserIdAndStatus(
+        userId: Long,
+        status: InvoiceStatus,
+    ): List<Invoice>
 }

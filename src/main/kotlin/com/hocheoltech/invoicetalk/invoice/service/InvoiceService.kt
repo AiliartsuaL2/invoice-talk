@@ -4,16 +4,15 @@ import com.hocheoltech.invoicetalk.global.enums.ExcelUploadType
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
 import com.hocheoltech.invoicetalk.invoice.dto.*
-import com.hocheoltech.invoicetalk.invoice.entity.Invoice
 import com.hocheoltech.invoicetalk.invoice.excel.Cafe24ExcelUploader
 import com.hocheoltech.invoicetalk.invoice.excel.CoupangExcelUploader
+import com.hocheoltech.invoicetalk.invoice.excel.InvoiceNumberExcelUploader
 import com.hocheoltech.invoicetalk.invoice.excel.NaverExcelUploader
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceMapper
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceStatusHistoryMapper
 import com.hocheoltech.invoicetalk.invoice.repository.InvoiceRepository
 import com.hocheoltech.invoicetalk.user.repository.UserRepository
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -31,6 +30,7 @@ class InvoiceService(
     private val coupangExcelUploader: CoupangExcelUploader,
     private val naverExcelUploader: NaverExcelUploader,
     private val cafe24ExcelUploader: Cafe24ExcelUploader,
+    private val invoiceNumberExcelUploader: InvoiceNumberExcelUploader,
 ) {
     /**
      * 송장 단건 등록
@@ -92,6 +92,28 @@ class InvoiceService(
         invoiceRepository.saveAll(invoices)
     }
 
+    @Transactional
+    fun updateInvoiceNumbers(
+        userId: Long,
+        excelFile: MultipartFile,
+    ) {
+        val invoices = invoiceNumberExcelUploader.upload(excelFile)
+         val registeredInvoices = invoiceRepository.findByUserIdAndStatus(
+            userId = userId,
+            status = InvoiceStatus.PENDING
+        ).associateBy { it.receiverName }
+        invoices.forEach { invoice ->
+            // 있는 데이터들만 등록
+            registeredInvoices[invoice.receiverName]
+                ?.let {
+                    val replacedNumber = invoice.number?.replace("-", "")
+                    if (replacedNumber != null) {
+                        it.registeredNumber(replacedNumber)
+                    }
+                }
+        }
+    }
+
     fun getInvoices(
         userId: Long,
         request: GetInvoice.Request
@@ -125,9 +147,11 @@ class InvoiceService(
         userId: Long,
         request: PostInvoiceScan.Request
     ): List<PostInvoiceScan.Response> {
+        // 대신 택배 :: 바코드에서 마지막 3자리는 내부 Sequence
+        val deletedSuffixNumber = request.invoiceNumber.substring(0, (request.invoiceNumber.length - 3))
         val invoices = invoiceRepository.findForScan(
             userId = userId,
-            number = request.invoiceNumber,
+            number = deletedSuffixNumber,
             status = request.type.toBeforeInvoiceStatus(),
             invoiceId = request.id,
         )

@@ -6,10 +6,8 @@ import com.hocheoltech.invoicetalk.invoice.dto.GetProcessedInvoice
 import com.hocheoltech.invoicetalk.invoice.dto.PutInvoice
 import com.hocheoltech.invoicetalk.invoice.dto.PostInvoiceScan
 import com.hocheoltech.invoicetalk.invoice.entity.Invoice
-import com.hocheoltech.invoicetalk.invoice.excel.InvoiceExcelUpload
+import com.hocheoltech.invoicetalk.invoice.excel.InvoiceExcelUploadDto
 import com.hocheoltech.invoicetalk.user.entity.User
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import org.mapstruct.Context
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -31,11 +29,11 @@ abstract class InvoiceMapper {
 
     abstract fun toScanResponse(invoice: Invoice): PostInvoiceScan.Response
 
-    fun toEntity(request: InvoiceExcelUpload, user: User): Invoice {
+    fun toEntity(request: InvoiceExcelUploadDto, user: User): Invoice {
         return Invoice(
             courierName = request.courierName!!,
             status = InvoiceStatus.PENDING,
-            number = request.number!!,
+            number = null,
             productName = request.productName!!,
             sendAddress = user.address,
             receiveAddress = request.receiveAddress!!,

@@ -19,7 +19,7 @@ class Invoice(
     @Enumerated(EnumType.STRING)
     var status: InvoiceStatus,
     // 송장번호
-    var number: String,
+    var number: String?,
     // 상품명
     var productName: String,
     // 발송지
@@ -60,5 +60,9 @@ class Invoice(
         receiveAddress = request.receiveAddress!!
         receiverName = request.receiverName!!
         status = request.status
+    }
+
+    fun registeredNumber(number: String) {
+        this.number = number
     }
 }

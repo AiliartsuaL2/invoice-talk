@@ -45,6 +45,16 @@ class InvoiceController(
         return ResponseEntity.ok(invoiceService.createInvoices(userId, type, file))
     }
 
+    // 엑셀 등록 (송장 번호 업데이트)
+    @PatchMapping("/api/v1/invoices/excel")
+    fun updateInvoiceNumber(
+        @RequestHeader(value = "user-id")
+        userId: Long,
+        @RequestPart file: MultipartFile,
+    ): ResponseEntity<Unit> {
+        return ResponseEntity.ok(invoiceService.updateInvoiceNumbers(userId, file))
+    }
+
     // 송장 내역 리스트 조회
     @GetMapping("/api/v1/invoices")
     fun getInvoices(
