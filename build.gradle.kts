@@ -64,7 +64,7 @@ dependencies {
     kaptTest("org.mapstruct:mapstruct-processor:1.6.3")
 
     // excel
-    implementation("org.apache.poi:poi-ooxml:3.9")
+    implementation("org.apache.poi:poi-ooxml:5.2.4")
 
 
     runtimeOnly("com.mysql:mysql-connector-j")

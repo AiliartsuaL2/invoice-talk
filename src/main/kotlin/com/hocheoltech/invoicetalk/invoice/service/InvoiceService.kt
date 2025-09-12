@@ -4,10 +4,7 @@ import com.hocheoltech.invoicetalk.global.enums.ExcelUploadType
 import com.hocheoltech.invoicetalk.global.enums.InvoiceStatus
 import com.hocheoltech.invoicetalk.global.error.ErrorCode
 import com.hocheoltech.invoicetalk.invoice.dto.*
-import com.hocheoltech.invoicetalk.invoice.excel.Cafe24ExcelUploader
-import com.hocheoltech.invoicetalk.invoice.excel.CoupangExcelUploader
-import com.hocheoltech.invoicetalk.invoice.excel.InvoiceNumberExcelUploader
-import com.hocheoltech.invoicetalk.invoice.excel.NaverExcelUploader
+import com.hocheoltech.invoicetalk.invoice.excel.*
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceMapper
 import com.hocheoltech.invoicetalk.invoice.mapper.InvoiceStatusHistoryMapper
 import com.hocheoltech.invoicetalk.invoice.repository.InvoiceRepository
@@ -31,6 +28,7 @@ class InvoiceService(
     private val naverExcelUploader: NaverExcelUploader,
     private val cafe24ExcelUploader: Cafe24ExcelUploader,
     private val invoiceNumberExcelUploader: InvoiceNumberExcelUploader,
+    private val auctionExcelUploader: AuctionExcelUploader,
 ) {
     /**
      * 송장 단건 등록
@@ -85,6 +83,7 @@ class InvoiceService(
             ExcelUploadType.COUPANG -> coupangExcelUploader.upload(excelFile)
             ExcelUploadType.NAVER -> naverExcelUploader.upload(excelFile)
             ExcelUploadType.CAFE24 -> cafe24ExcelUploader.upload(excelFile)
+            ExcelUploadType.AUCTION -> auctionExcelUploader.upload(excelFile)
         }
         val invoices = uploadedData.map {
             invoiceMapper.toEntity(it, user)
