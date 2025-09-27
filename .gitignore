@@ -44,5 +44,3 @@ out/
 .gradle/
 build/
 .gitattributes
-gradlew
-gradlew.bat
