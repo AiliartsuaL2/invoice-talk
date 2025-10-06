@@ -44,3 +44,4 @@ out/
 .gradle/
 build/
 .gitattributes
+src/main/resources/application.yml
